@@ -53,7 +53,7 @@ public class Architecture {
 		intbus1 = new Bus();
 		intbus2 = new Bus();
 		PC = new Register("PC", extbus1, intbus2);
-		IR = new Register("IR", extbus1, intbus2);
+		IR = new Register("IR", extbus1, extbus1);
 		RPG = new Register("RPG0", extbus1, intbus1);
 		RPG1 = new Register ("RPG1", extbus1, intbus1);
 		RPG2 = new Register ("RPG2", extbus1, intbus1);
@@ -303,7 +303,388 @@ public class Architecture {
 		ula.internalRead(1);
 		PC.internalStore();
 	}
-	
+
+	protected void addMemReg() {
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		// StackTop <- PC
+		PC.internalRead();
+		setDataStackTop();
+
+		// Ula(0) <- Mem
+		PC.read();
+		memory.read();     // the second register
+		memory.read();
+		PC.store();
+		PC.internalRead();
+		ula.internalStore(0);
+
+		// PC <- StackTop
+		getDataStackTop();
+		PC.internalStore();
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		// Ula(1) <- REGA
+		PC.read();
+		memory.read();                  // the second register
+		demux.setValue(extbus1.get());  //points to the correct register
+		registersInternalRead();        //starts the read from the register
+		ula.store(1);
+
+		ula.add();
+
+		// REGA <- UlaAdd
+		ula.internalRead(1);
+		setStatusFlags(intbus2.get());
+		ula.read(1);
+		demux.setValue(extbus1.get()); //points to the correct register
+		registersInternalStore();
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+	}
+
+	protected void addRegMem() {
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		//Pegar o valor do registrador e guardar na ULA
+		PC.read();
+		memory.read();
+		demux.setValue(extbus1.get());
+		registersInternalRead();
+		ula.store(0);
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		//Guardar o valor do PC
+		PC.internalRead();
+		setDataStackTop();
+
+		//Pegar o valor da memória, passar pelo PC, e meter na ULA
+		PC.read();
+		memory.read();
+		memory.read();
+		PC.store();
+		PC.internalRead();
+		ula.internalStore(1);
+
+		//Fazer o add, e passar o valor da soma, pelo pc, e guardar no IR
+		ula.add();
+		ula.internalRead(1);
+		setStatusFlags(intbus2.get());
+		PC.internalStore();
+		PC.read();
+		IR.store();
+
+		//Devolver o valor do PC, e pegar o endereço para armazenar o valor da soma
+		getDataStackTop();
+		PC.internalStore();
+		PC.read();
+		memory.read();
+		memory.store();
+		IR.read();
+		memory.store();
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+	}
+
+	protected void addImmReg() {
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		//Guardar o valor do PC
+		PC.internalRead();
+		setDataStackTop();
+
+		//Pegar o valor da memória, passar pelo PC, e meter na ULA
+		PC.read();
+		memory.read();
+		PC.store();
+		PC.internalRead();
+		ula.internalStore(0);
+
+		//Devolver o valor do PC e fazer o PC ++
+		getDataStackTop();
+		PC.internalStore();
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		//Pegar o ID do registrador e jogar seu valor na ULA
+		PC.read();
+		memory.read();
+		demux.setValue(extbus1.get()); //points to the correct register
+		registersInternalRead(); //starts the read from the register
+		ula.store(1);
+
+		//Fazer o add, e passar o valor da soma para o registrador
+		ula.add();
+		ula.internalRead(1);
+		setStatusFlags(intbus2.get());
+		ula.read(1);
+		demux.setValue(extbus1.get()); //points to the correct register
+		registersInternalStore(); //starts the read from the register
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+	}
+
+	// Sub commands
+	protected void subRegReg() {
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		// Ula(0) <- REGA
+		PC.read();
+		memory.read();                   // the second register
+		demux.setValue(extbus1.get());   //points to the correct register
+		registersInternalRead();         //starts the read from the register
+		ula.store(0);
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		// Ula(1) <- REGB
+		PC.read();
+		memory.read();                  // the second register
+		demux.setValue(extbus1.get());  //points to the correct register
+		registersInternalRead();        //starts the read from the register
+		ula.store(1);
+
+		ula.sub();
+
+		// REGB <- UlaSub
+		ula.internalRead(1);
+		setStatusFlags(intbus2.get());
+		ula.read(1);
+		demux.setValue(extbus1.get());  //points to the correct register
+		registersInternalStore();
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+	}
+
+	protected void subMemReg() {
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		// StackTop <- PC
+		PC.internalRead();
+		setDataStackTop();
+
+		// Ula(0) <- Mem
+		PC.read();
+		memory.read();      // the second register
+		memory.read();
+		PC.store();
+		PC.internalRead();
+		ula.internalStore(0);
+
+		// PC <- StackTop
+		getDataStackTop();
+		PC.internalStore();
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		// Ula(1) <- REGA
+		PC.read();
+		memory.read();                  // the second register
+		demux.setValue(extbus1.get());  //points to the correct register
+		registersInternalRead();        //starts the read from the register
+		ula.store(1);
+
+		ula.sub();
+
+		// REGB <- UlaSub
+		ula.internalRead(1);
+		setStatusFlags(intbus2.get());
+		ula.read(1);
+		demux.setValue(extbus1.get());  //points to the correct register
+		registersInternalStore();
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+	}
+
+	protected void subRegMem() {
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		//Pegar o valor do registrador e guardar na ULA
+		PC.read();
+		memory.read();
+		demux.setValue(extbus1.get());
+		registersInternalRead();
+		ula.store(0);
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		//Guardar o valor do PC
+		PC.internalRead();
+		setDataStackTop();
+
+		//Pegar o valor da memória, passar pelo PC, e meter na ULA
+		PC.read();
+		memory.read();
+		memory.read();
+		PC.store();
+		PC.internalRead();
+		ula.internalStore(1);
+
+		//Fazer o sub, e passar o valor da soma, pelo pc, e guardar no IR
+		ula.sub();
+		ula.internalRead(1);
+		setStatusFlags(intbus2.get());
+		PC.internalStore();
+		PC.read();
+		IR.store();
+
+		//Devolver o valor do PC, e pegar o endereço para armazenar o valor da soma
+		getDataStackTop();
+		PC.internalStore();
+		PC.read();
+		memory.read();
+		memory.store();
+		IR.read();
+		memory.store();
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+	}
+
+	protected void subImmReg() {
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		//Guardar o valor do PC
+		PC.internalRead();
+		setDataStackTop();
+
+		//Pegar o valor da memória, passar pelo PC, e meter na ULA
+		PC.read();
+		memory.read();
+		PC.store();
+		PC.internalRead();
+		ula.internalStore(0);
+
+		//Devolver o valor do PC e fazer o PC ++
+		getDataStackTop();
+		PC.internalStore();
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		//Pegar o ID do registrador e jogar seu valor na ULA
+		PC.read();
+		memory.read();
+		demux.setValue(extbus1.get()); //points to the correct register
+		registersInternalRead(); //starts the read from the register
+		ula.store(1);
+
+		//Fazer o sub, e passar o valor da soma para o registrador
+		ula.sub();
+		ula.internalRead(1);
+		setStatusFlags(intbus2.get());
+		ula.read(1);
+		demux.setValue(extbus1.get()); //points to the correct register
+		registersInternalStore(); //starts the read from the register
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+	}
+
 	/**
 	 * This method is used after some ULA operations, setting the flags bits according the result.
 	 * @param result is the result of the operation
@@ -403,39 +784,36 @@ public class Architecture {
 		int command = intbus2.get();
 		simulationDecodeExecuteBefore(command);
 		switch (command) {
-		case 0:
-			add();
-			break;
-		case 1:
-			sub();
-			break;
-		case 2:
-			jmp();
-			break;
-		case 3:
-			jz();
-			break;
-		case 4:
-			jn();
-			break;
-		case 5:
-			read();
-			break;
-		case 6:
-			store();
-			break;
-		case 7:
-			ldi();
-			break;
-		case 8:
-			inc();
-			break;
-		case 9:
-			moveRegReg();
-			break;
-		default:
-			halt = true;
-			break;
+			case 0: addRegReg(); break;
+			case 1: addMemReg(); break;
+			case 2: addRegMem(); break;
+			case 3: addImmReg(); break;
+
+			case 4: subRegReg(); break;
+			case 5: subMemReg(); break;
+			case 6: subRegMem(); break;
+			case 7: subImmReg(); break;
+//
+//			case 8:  moveMemReg(); break;
+//			case 9:  moveRegMem(); break;
+//			case 10: moveRegReg(); break;
+//			case 11: moveImmReg(); break;
+//
+//			case 12: inc(); break;
+//
+//			case 13: jmp(); break;
+//			case 14: jz();  break;
+//			case 15: jn();  break;
+//
+//			case 16: jeq();  break;
+//			case 17: jneq(); break;
+//			case 18: jgt();  break;
+//			case 19: jlw();  break;
+//
+//			case 20: call(); break;
+//			case 21: ret();  break;
+
+			default: halt = true; break;
 		}
 		if (simulation)
 			simulationDecodeExecuteAfter();

@@ -7,7 +7,9 @@
     <list default="true" id="fb43a2ce-ad51-49f5-a708-06b8d096a12a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/architecture/Architecture.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/architecture/Architecture.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/architecture/TestArchitecture.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/architecture/TestArchitecture.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/architecture/Architecture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/architecture/Architecture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/architecture/TestArchitecture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/architecture/TestArchitecture.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,16 +27,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Architecture.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/apps/S_Architecture&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Architecture.executor": "Run",
+    "JUnit.TestArchitecture.testAddImmReg.executor": "Run",
+    "JUnit.TestArchitecture.testAddMemReg.executor": "Run",
+    "JUnit.TestArchitecture.testAddRegMem.executor": "Run",
+    "JUnit.TestArchitecture.testAddRegReg.executor": "Run",
+    "JUnit.TestArchitecture.testSubRegReg.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/apps/architecture-oac"
   }
-}</component>
-  <component name="RunManager">
+}]]></component>
+  <component name="RunManager" selected="JUnit.TestArchitecture.testSubImmReg">
     <configuration name="Architecture" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="JavaSE-1.7" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -50,6 +57,95 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="TestArchitecture.testAddImmReg" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="S_Architecture" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="architecture.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="architecture" />
+      <option name="MAIN_CLASS_NAME" value="architecture.TestArchitecture" />
+      <option name="METHOD_NAME" value="testAddImmReg" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestArchitecture.testSubImmReg" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="S_Architecture" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="architecture.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="architecture" />
+      <option name="MAIN_CLASS_NAME" value="architecture.TestArchitecture" />
+      <option name="METHOD_NAME" value="testSubImmReg" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestArchitecture.testSubMemReg" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="S_Architecture" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="architecture.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="architecture" />
+      <option name="MAIN_CLASS_NAME" value="architecture.TestArchitecture" />
+      <option name="METHOD_NAME" value="testSubMemReg" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestArchitecture.testSubRegMem" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="S_Architecture" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="architecture.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="architecture" />
+      <option name="MAIN_CLASS_NAME" value="architecture.TestArchitecture" />
+      <option name="METHOD_NAME" value="testSubRegMem" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestArchitecture.testSubRegReg" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="S_Architecture" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="architecture.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="architecture" />
+      <option name="MAIN_CLASS_NAME" value="architecture.TestArchitecture" />
+      <option name="METHOD_NAME" value="testSubRegReg" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.TestArchitecture.testSubImmReg" />
+        <item itemvalue="JUnit.TestArchitecture.testSubRegMem" />
+        <item itemvalue="JUnit.TestArchitecture.testSubMemReg" />
+        <item itemvalue="JUnit.TestArchitecture.testSubRegReg" />
+        <item itemvalue="JUnit.TestArchitecture.testAddImmReg" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
