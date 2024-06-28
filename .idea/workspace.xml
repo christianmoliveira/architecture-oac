@@ -34,6 +34,18 @@
     "JUnit.TestArchitecture.testAddMemReg.executor": "Run",
     "JUnit.TestArchitecture.testAddRegMem.executor": "Run",
     "JUnit.TestArchitecture.testAddRegReg.executor": "Run",
+    "JUnit.TestArchitecture.testFillCommandsList.executor": "Run",
+    "JUnit.TestArchitecture.testInc.executor": "Run",
+    "JUnit.TestArchitecture.testJmp.executor": "Run",
+    "JUnit.TestArchitecture.testJn.executor": "Run",
+    "JUnit.TestArchitecture.testJz.executor": "Run",
+    "JUnit.TestArchitecture.testMoveImmReg.executor": "Run",
+    "JUnit.TestArchitecture.testMoveMemReg.executor": "Run",
+    "JUnit.TestArchitecture.testMoveRegMem.executor": "Run",
+    "JUnit.TestArchitecture.testMoveRegReg.executor": "Run",
+    "JUnit.TestArchitecture.testSubImmReg.executor": "Run",
+    "JUnit.TestArchitecture.testSubMemReg.executor": "Run",
+    "JUnit.TestArchitecture.testSubRegMem.executor": "Run",
     "JUnit.TestArchitecture.testSubRegReg.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
@@ -41,7 +53,7 @@
     "last_opened_file_path": "C:/apps/architecture-oac"
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.TestArchitecture.testSubImmReg">
+  <component name="RunManager" selected="JUnit.TestArchitecture.testReadExec">
     <configuration name="Architecture" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="JavaSE-1.7" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -57,7 +69,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestArchitecture.testAddImmReg" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TestArchitecture.testFillCommandsList" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="S_Architecture" />
       <extension name="coverage">
         <pattern>
@@ -67,13 +79,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="architecture" />
       <option name="MAIN_CLASS_NAME" value="architecture.TestArchitecture" />
-      <option name="METHOD_NAME" value="testAddImmReg" />
+      <option name="METHOD_NAME" value="testFillCommandsList" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestArchitecture.testSubImmReg" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TestArchitecture.testJmp" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="S_Architecture" />
       <extension name="coverage">
         <pattern>
@@ -83,13 +95,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="architecture" />
       <option name="MAIN_CLASS_NAME" value="architecture.TestArchitecture" />
-      <option name="METHOD_NAME" value="testSubImmReg" />
+      <option name="METHOD_NAME" value="testJmp" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestArchitecture.testSubMemReg" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TestArchitecture.testJn" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="S_Architecture" />
       <extension name="coverage">
         <pattern>
@@ -99,13 +111,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="architecture" />
       <option name="MAIN_CLASS_NAME" value="architecture.TestArchitecture" />
-      <option name="METHOD_NAME" value="testSubMemReg" />
+      <option name="METHOD_NAME" value="testJn" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestArchitecture.testSubRegMem" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TestArchitecture.testJz" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="S_Architecture" />
       <extension name="coverage">
         <pattern>
@@ -115,13 +127,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="architecture" />
       <option name="MAIN_CLASS_NAME" value="architecture.TestArchitecture" />
-      <option name="METHOD_NAME" value="testSubRegMem" />
+      <option name="METHOD_NAME" value="testJz" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestArchitecture.testSubRegReg" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TestArchitecture.testReadExec" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="S_Architecture" />
       <extension name="coverage">
         <pattern>
@@ -131,7 +143,7 @@
       </extension>
       <option name="PACKAGE_NAME" value="architecture" />
       <option name="MAIN_CLASS_NAME" value="architecture.TestArchitecture" />
-      <option name="METHOD_NAME" value="testSubRegReg" />
+      <option name="METHOD_NAME" value="testReadExec" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -139,11 +151,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.TestArchitecture.testSubImmReg" />
-        <item itemvalue="JUnit.TestArchitecture.testSubRegMem" />
-        <item itemvalue="JUnit.TestArchitecture.testSubMemReg" />
-        <item itemvalue="JUnit.TestArchitecture.testSubRegReg" />
-        <item itemvalue="JUnit.TestArchitecture.testAddImmReg" />
+        <item itemvalue="JUnit.TestArchitecture.testReadExec" />
+        <item itemvalue="JUnit.TestArchitecture.testFillCommandsList" />
+        <item itemvalue="JUnit.TestArchitecture.testJn" />
+        <item itemvalue="JUnit.TestArchitecture.testJz" />
+        <item itemvalue="JUnit.TestArchitecture.testJmp" />
       </list>
     </recent_temporary>
   </component>

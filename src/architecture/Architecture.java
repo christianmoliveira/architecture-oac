@@ -685,6 +685,530 @@ public class Architecture {
 		PC.internalStore();
 	}
 
+	// Move commands
+	public void moveMemReg() {
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		//guardar o pc no Stack
+		PC.internalRead();
+		setDataStackTop();
+
+		//pegar o valor da memoria e jogar na ula, atravessando o rio nilo e o PC
+		PC.read();
+		memory.read();
+		memory.read();
+		PC.store();
+		PC.internalRead();
+		ula.internalStore(0);
+
+		//resgatar o valor do PC
+		getDataStackTop();
+		PC.internalStore();
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		//jogar o valor da memoria no registrador
+		ula.read(0);
+		PC.read();
+		memory.read();
+		demux.setValue(extbus1.get());
+		registersInternalStore();
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+	}
+
+	public void moveRegMem() {
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		//pegar o id do registrador, e aguardar o comando
+		PC.read();
+		memory.read();
+		demux.setValue(extbus1.get());
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		//pegar o endereço de memoria, e dar o comando pro registrador
+		//cuspir seu dado, guardando na memoria
+		PC.read();
+		memory.read();
+		memory.store();
+		registersRead();
+		memory.store();
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+	}
+
+	public void moveRegReg() {
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		PC.read();
+		memory.read();
+		demux.setValue(extbus1.get());
+		registersInternalRead();
+		ula.store(0);
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		PC.read();
+		memory.read();
+		demux.setValue(extbus1.get());
+		ula.read(0);
+		registersInternalStore();
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+	}
+
+	public void moveImmReg() {
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		PC.read();
+		memory.read();
+		IR.store();
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		PC.read();
+		memory.read();
+		demux.setValue(extbus1.get());
+		IR.read();
+		registersStore();
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+	}
+
+	// Increment command
+	public void inc() {
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		// Ula(1) <- REGA
+		PC.read();
+		memory.read();
+		demux.setValue(extbus1.get());   //points to the correct register
+		registersInternalRead();
+		ula.store(1);
+
+		ula.inc();
+
+		// REGA <- UlaInc
+		ula.read(1);
+		setStatusFlags(intbus1.get());
+		demux.setValue(extbus1.get());   //points to the correct register
+		registersInternalStore();
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+	}
+
+	// Deviations
+	public void jmp() {
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		// PC <- Mem
+		PC.read();
+		memory.read();
+		PC.store();
+	}
+
+	public void jz(){
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		if (Flags.getBit(0)==1){
+			PC.read();
+			memory.read();
+			PC.store();
+		}
+		else {
+			// PC++
+			PC.internalRead();
+			ula.internalStore(1);
+			ula.inc();
+			ula.internalRead(1);
+			PC.internalStore();
+		}
+	}
+
+	public void jn(){
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		if (Flags.getBit(1)==1){
+			PC.read();
+			memory.read();
+			PC.store();
+		}
+		else{
+			// PC++
+			PC.internalRead();
+			ula.internalStore(1);
+			ula.inc();
+			ula.internalRead(1);
+			PC.internalStore();
+		}
+	}
+
+	public void jeq(){
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		PC.read();
+		memory.read(); // the second register
+		demux.setValue(extbus1.get()); //points to the correct register
+		registersInternalRead(); //starts the read from the register
+		ula.store(0);
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		PC.read();
+		memory.read(); // the second register
+		demux.setValue(extbus1.get()); //points to the correct register
+		registersInternalRead(); //starts the read from the register
+
+		ula.store(1);
+		ula.sub();
+		ula.internalRead(1);
+		setStatusFlags(intbus2.get());
+
+
+		if (Flags.getBit(0)==1){
+			// PC++
+			PC.internalRead();
+			ula.internalStore(1);
+			ula.inc();
+			ula.internalRead(1);
+			PC.internalStore();
+
+			PC.read();
+			memory.read();
+			PC.store();
+		}
+		else {
+			// PC++
+			PC.internalRead();
+			ula.internalStore(1);
+			ula.inc();
+			ula.internalRead(1);
+			PC.internalStore();
+
+			// PC++
+			PC.internalRead();
+			ula.internalStore(1);
+			ula.inc();
+			ula.internalRead(1);
+			PC.internalStore();
+		}
+	}
+
+	public void jneq(){
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		PC.read();
+		memory.read(); // the second register
+		demux.setValue(extbus1.get()); //points to the correct register
+		registersInternalRead(); //starts the read from the register
+		ula.store(0);
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		PC.read();
+		memory.read(); // the second register
+		demux.setValue(extbus1.get()); //points to the correct register
+		registersInternalRead(); //starts the read from the register
+
+		ula.store(1);
+		ula.sub();
+		ula.internalRead(1);
+		setStatusFlags(intbus2.get());
+
+
+		if (Flags.getBit(0)!=1){
+			// PC++
+			PC.internalRead();
+			ula.internalStore(1);
+			ula.inc();
+			ula.internalRead(1);
+			PC.internalStore();
+
+			PC.read();
+			memory.read();
+			PC.store();
+		}
+		else {
+			// PC++
+			PC.internalRead();
+			ula.internalStore(1);
+			ula.inc();
+			ula.internalRead(1);
+			PC.internalStore();
+
+			// PC++
+			PC.internalRead();
+			ula.internalStore(1);
+			ula.inc();
+			ula.internalRead(1);
+			PC.internalStore();
+		}
+	}
+
+	public void jgt(){
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		PC.read();
+		memory.read(); // the second register
+		demux.setValue(extbus1.get()); //points to the correct register
+		registersInternalRead(); //starts the read from the register
+		ula.store(0);
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		PC.read();
+		memory.read(); // the second register
+		demux.setValue(extbus1.get()); //points to the correct register
+		registersInternalRead(); //starts the read from the register
+
+		ula.store(1);
+		ula.sub();
+		ula.internalRead(1);
+		setStatusFlags(intbus2.get());
+
+
+		if (Flags.getBit(0)==0 && Flags.getBit(1)==0){
+			// PC++
+			PC.internalRead();
+			ula.internalStore(1);
+			ula.inc();
+			ula.internalRead(1);
+			PC.internalStore();
+
+			PC.read();
+			memory.read();
+			PC.store();
+		}
+		else{
+			// PC++
+			PC.internalRead();
+			ula.internalStore(1);
+			ula.inc();
+			ula.internalRead(1);
+			PC.internalStore();
+
+			// PC++
+			PC.internalRead();
+			ula.internalStore(1);
+			ula.inc();
+			ula.internalRead(1);
+			PC.internalStore();
+		}
+	}
+
+	public void jlw(){
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		PC.read();
+		memory.read(); // the second register
+		demux.setValue(extbus1.get()); //points to the correct register
+		registersInternalRead(); //starts the read from the register
+		ula.store(0);
+
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		PC.read();
+		memory.read(); // the second register
+		demux.setValue(extbus1.get()); //points to the correct register
+		registersInternalRead(); //starts the read from the register
+
+		ula.store(1);
+		ula.sub();
+		ula.internalRead(1);
+		setStatusFlags(intbus2.get());
+
+
+		if (Flags.getBit(1)==1){
+			// PC++
+			PC.internalRead();
+			ula.internalStore(1);
+			ula.inc();
+			ula.internalRead(1);
+			PC.internalStore();
+			PC.read();
+			memory.read();
+			PC.store();
+		}
+		else{
+			// PC++
+			PC.internalRead();
+			ula.internalStore(1);
+			ula.inc();
+			ula.internalRead(1);
+			PC.internalStore();
+
+			// PC++
+			PC.internalRead();
+			ula.internalStore(1);
+			ula.inc();
+			ula.internalRead(1);
+			PC.internalStore();
+		}
+	}
+
+	public void call() {
+		// PC++
+		PC.internalRead();
+		ula.internalStore(1);
+		ula.inc();
+		ula.internalRead(1);
+		PC.internalStore();
+
+		// StackTop <- PC+1
+		ula.inc();
+		ula.internalRead(1);
+		setDataStackTop();
+
+		// PC <- Mem
+		PC.read();
+		memory.read();
+		PC.store();
+	}
+
+	public void ret() {
+		// PC <- StackTop
+		if(StackTop.getData() == StackBottom.getData()){
+			// PC++
+			PC.internalRead();
+			ula.internalStore(1);
+			ula.inc();
+			ula.internalRead(1);
+			PC.internalStore();
+		}
+		else{
+			getDataStackTop();
+			PC.internalStore();
+		}
+
+	}
+
+
 	/**
 	 * This method is used after some ULA operations, setting the flags bits according the result.
 	 * @param result is the result of the operation
@@ -793,25 +1317,25 @@ public class Architecture {
 			case 5: subMemReg(); break;
 			case 6: subRegMem(); break;
 			case 7: subImmReg(); break;
-//
-//			case 8:  moveMemReg(); break;
-//			case 9:  moveRegMem(); break;
-//			case 10: moveRegReg(); break;
-//			case 11: moveImmReg(); break;
-//
-//			case 12: inc(); break;
-//
-//			case 13: jmp(); break;
-//			case 14: jz();  break;
-//			case 15: jn();  break;
-//
-//			case 16: jeq();  break;
-//			case 17: jneq(); break;
-//			case 18: jgt();  break;
-//			case 19: jlw();  break;
-//
-//			case 20: call(); break;
-//			case 21: ret();  break;
+
+			case 8:  moveMemReg(); break;
+			case 9:  moveRegMem(); break;
+			case 10: moveRegReg(); break;
+			case 11: moveImmReg(); break;
+
+			case 12: inc(); break;
+
+			case 13: jmp(); break;
+			case 14: jz();  break;
+			case 15: jn();  break;
+
+			case 16: jeq();  break;
+			case 17: jneq(); break;
+			case 18: jgt();  break;
+			case 19: jlw();  break;
+
+			case 20: call(); break;
+			case 21: ret();  break;
 
 			default: halt = true; break;
 		}
