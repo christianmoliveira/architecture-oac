@@ -1627,7 +1627,7 @@ public class Architecture {
 	public static void main(String[] args) throws IOException {
 		Architecture arch = new Architecture(true);
 //		arch.readExec("program");
-		arch.readExec("testeFile");
+		arch.readExec("testFile");
 		arch.controlUnitEexec();
 	}
 	
