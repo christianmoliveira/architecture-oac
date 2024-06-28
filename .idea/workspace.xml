@@ -5,6 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb43a2ce-ad51-49f5-a708-06b8d096a12a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/architecture/Architecture.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/architecture/Architecture.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/architecture/TestArchitecture.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/architecture/TestArchitecture.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/architecture/Architecture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/architecture/Architecture.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -26,6 +29,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.Architecture.executor": "Run",
+    "JUnit.TestArchitecture.executor": "Run",
     "JUnit.TestArchitecture.testAddImmReg.executor": "Run",
     "JUnit.TestArchitecture.testAddMemReg.executor": "Run",
     "JUnit.TestArchitecture.testAddRegMem.executor": "Run",
@@ -50,7 +54,7 @@
     "last_opened_file_path": "C:/apps/architecture-oac"
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.TestArchitecture">
+  <component name="RunManager" selected="Application.Architecture">
     <configuration name="Architecture" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="JavaSE-1.7" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />

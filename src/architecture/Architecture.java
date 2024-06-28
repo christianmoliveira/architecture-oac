@@ -1388,7 +1388,7 @@ public class Architecture {
 	 * The register id must be in the demux bus
 	 */
 	private void registersInternalRead() {
-		registersList.get(demux.getValue()).internalRead();;
+		registersList.get(demux.getValue()).internalRead();
 	}
 	
 	/**
@@ -1420,15 +1420,31 @@ public class Architecture {
 		   BufferedReader br = new BufferedReader(new		 
 		   FileReader(filename+".dxf"));
 		   String linha;
-		   int i=0;
+		   int i=0, ok=0;
+		   int position_Stack;
+
 		   while ((linha = br.readLine()) != null) {
-			     extbus1.put(i);
-			     memory.store();
-			   	 extbus1.put(Integer.parseInt(linha));
-			     memory.store();
-			     i++;
+			   if (ok!=-1) {
+				   extbus1.put(i);
+				   memory.store();
+				   ok = Integer.parseInt(linha);
+				   extbus1.put(ok);
+				   memory.store();
+				   i++;
+			   }
+			   else {
+				   // Guarda a posição da Stack e a inicializa
+				   position_Stack = Integer.parseInt(linha);
+				   initializeStack(position_Stack);
+			   }
 			}
 			br.close();
+	}
+
+	protected void initializeStack(int position) {
+		intbus2.put(position);
+		StackTop.store();
+		StackBottom.store();
 	}
 	
 	/**
@@ -1497,23 +1513,40 @@ public class Architecture {
 	private void simulationDecodeExecuteBefore(int command) {
 		System.out.println("----------BEFORE Decode and Execute phases--------------");
 		String instruction;
-		int parameter = 0;
+		int parameter  = 0;
+		int parameter2 = 0;
+		int parameter3 = 0;
+
 		for (Register r:registersList) {
 			System.out.println(r.getRegisterName()+": "+r.getData());
 		}
+
 		if (command !=-1)
 			instruction = commandsList.get(command);
 		else
 			instruction = "END";
+
 		if (hasOperands(instruction)) {
 			parameter = memory.getDataList()[PC.getData()+1];
-			System.out.println("Instruction: "+instruction+" "+parameter);
+
+			if (hasOneOperand(command))
+				System.out.println("Instruction: "+instruction+" "+parameter);
+			else {
+				parameter2 = memory.getDataList()[PC.getData()+2];
+
+				if (hasTwoOperands(command))
+					System.out.println("Instruction: "+instruction+" "+parameter+
+							" "+parameter2);
+				else {
+					parameter3 = memory.getDataList()[PC.getData()+3];
+					System.out.println("Instruction: "+instruction+" "+parameter+
+							" "+parameter2+
+							" "+parameter3);
+				}
+			}
 		}
 		else
 			System.out.println("Instruction: "+instruction);
-		if ("read".equals(instruction))
-			System.out.println("memory["+parameter+"]="+memory.getDataList()[parameter]);
-		
 	}
 
 	/**
@@ -1573,6 +1606,14 @@ public class Architecture {
 			return true;
 	}
 
+	private boolean hasOneOperand(int command) {
+        return command >= 12 && command <= 15 || command == 20;
+	}
+
+	private boolean hasTwoOperands(int command) {
+        return command >= 0 && command <= 11;
+	}
+
 	/**
 	 * This method returns the amount of positions allowed in the memory
 	 * of this architecture
@@ -1585,7 +1626,8 @@ public class Architecture {
 	
 	public static void main(String[] args) throws IOException {
 		Architecture arch = new Architecture(true);
-		arch.readExec("program");
+//		arch.readExec("program");
+		arch.readExec("testeFile");
 		arch.controlUnitEexec();
 	}
 	
