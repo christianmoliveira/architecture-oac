@@ -175,52 +175,6 @@ public class Architecture {
 
 	// all the microprograms must be implemented here
 
-	protected boolean getDataStackTop() {
-		try {
-			// Try to access the position below the stack top
-			int position = StackTop.getData() + 1;
-
-			// Saved data
-			int data = memory.getDataList()[position];
-
-			intbus2.put(position);
-			StackTop.store();
-
-			// Data removed from memory
-			memory.getDataList()[position] = 0;
-
-			// Bus get the data
-			intbus2.put(data);
-
-			return true;
-		} catch (ArrayIndexOutOfBoundsException e) {
-			// Capture the exception in case the position is out of bounds
-			// Indicating empty stack
-			return false;
-		}
-	}
-
-	protected boolean setDataStackTop() {
-		try {
-			// Mem[StackTop] = dataBus
-			int position = StackTop.getData();
-			int data = intbus2.get();
-
-			memory.getDataList()[position] = data;
-
-			// StackTop points to a position above
-			intbus2.put(position-1);
-			StackTop.store();
-
-			// Replacing the data on the bus
-			intbus2.put(data);
-
-			return true;
-		} catch (ArrayIndexOutOfBoundsException e) {
-			return false;
-		}
-	}
-
 	/**
 	 * This method fills the commands list arraylist with all commands used in this architecture
 	 */
@@ -314,7 +268,18 @@ public class Architecture {
 
 		// StackTop <- PC
 		PC.internalRead();
-		setDataStackTop();
+		// Mem[StackTop] = dataBus
+		int position = StackTop.getData();
+		int data = intbus2.get();
+
+		memory.getDataList()[position] = data;
+
+		// StackTop points to a position above
+		intbus2.put(position-1);
+		StackTop.store();
+
+		// Replacing the data on the bus
+		intbus2.put(data);
 
 		// Ula(0) <- Mem
 		PC.read();
@@ -325,7 +290,20 @@ public class Architecture {
 		ula.internalStore(0);
 
 		// PC <- StackTop
-		getDataStackTop();
+		// Try to access the position below the stack top
+		position = StackTop.getData() + 1;
+
+		// Saved data
+		data = memory.getDataList()[position];
+
+		intbus2.put(position);
+		StackTop.store();
+
+		// Data removed from memory
+		memory.getDataList()[position] = 0;
+
+		// Bus get the data
+		intbus2.put(data);
 		PC.internalStore();
 
 		// PC++
@@ -383,7 +361,18 @@ public class Architecture {
 
 		//Guardar o valor do PC
 		PC.internalRead();
-		setDataStackTop();
+		// Mem[StackTop] = dataBus
+		int position = StackTop.getData();
+		int data = intbus2.get();
+
+		memory.getDataList()[position] = data;
+
+		// StackTop points to a position above
+		intbus2.put(position-1);
+		StackTop.store();
+
+		// Replacing the data on the bus
+		intbus2.put(data);
 
 		//Pegar o valor da memória, passar pelo PC, e meter na ULA
 		PC.read();
@@ -402,7 +391,20 @@ public class Architecture {
 		IR.store();
 
 		//Devolver o valor do PC, e pegar o endereço para armazenar o valor da soma
-		getDataStackTop();
+		// Try to access the position below the stack top
+		position = StackTop.getData() + 1;
+
+		// Saved data
+		data = memory.getDataList()[position];
+
+		intbus2.put(position);
+		StackTop.store();
+
+		// Data removed from memory
+		memory.getDataList()[position] = 0;
+
+		// Bus get the data
+		intbus2.put(data);
 		PC.internalStore();
 		PC.read();
 		memory.read();
@@ -428,7 +430,18 @@ public class Architecture {
 
 		//Guardar o valor do PC
 		PC.internalRead();
-		setDataStackTop();
+		// Mem[StackTop] = dataBus
+		int position = StackTop.getData();
+		int data = intbus2.get();
+
+		memory.getDataList()[position] = data;
+
+		// StackTop points to a position above
+		intbus2.put(position-1);
+		StackTop.store();
+
+		// Replacing the data on the bus
+		intbus2.put(data);
 
 		//Pegar o valor da memória, passar pelo PC, e meter na ULA
 		PC.read();
@@ -438,7 +451,20 @@ public class Architecture {
 		ula.internalStore(0);
 
 		//Devolver o valor do PC e fazer o PC ++
-		getDataStackTop();
+		// Try to access the position below the stack top
+		position = StackTop.getData() + 1;
+
+		// Saved data
+		data = memory.getDataList()[position];
+
+		intbus2.put(position);
+		StackTop.store();
+
+		// Data removed from memory
+		memory.getDataList()[position] = 0;
+
+		// Bus get the data
+		intbus2.put(data);
 		PC.internalStore();
 
 		// PC++
@@ -528,7 +554,18 @@ public class Architecture {
 
 		// StackTop <- PC
 		PC.internalRead();
-		setDataStackTop();
+		// Mem[StackTop] = dataBus
+		int position = StackTop.getData();
+		int data = intbus2.get();
+
+		memory.getDataList()[position] = data;
+
+		// StackTop points to a position above
+		intbus2.put(position-1);
+		StackTop.store();
+
+		// Replacing the data on the bus
+		intbus2.put(data);
 
 		// Ula(0) <- Mem
 		PC.read();
@@ -539,7 +576,20 @@ public class Architecture {
 		ula.internalStore(0);
 
 		// PC <- StackTop
-		getDataStackTop();
+		// Try to access the position below the stack top
+		position = StackTop.getData() + 1;
+
+		// Saved data
+		data = memory.getDataList()[position];
+
+		intbus2.put(position);
+		StackTop.store();
+
+		// Data removed from memory
+		memory.getDataList()[position] = 0;
+
+		// Bus get the data
+		intbus2.put(data);
 		PC.internalStore();
 
 		// PC++
@@ -597,7 +647,18 @@ public class Architecture {
 
 		//Guardar o valor do PC
 		PC.internalRead();
-		setDataStackTop();
+		// Mem[StackTop] = dataBus
+		int position = StackTop.getData();
+		int data = intbus2.get();
+
+		memory.getDataList()[position] = data;
+
+		// StackTop points to a position above
+		intbus2.put(position-1);
+		StackTop.store();
+
+		// Replacing the data on the bus
+		intbus2.put(data);
 
 		//Pegar o valor da memória, passar pelo PC, e meter na ULA
 		PC.read();
@@ -616,7 +677,20 @@ public class Architecture {
 		IR.store();
 
 		//Devolver o valor do PC, e pegar o endereço para armazenar o valor da soma
-		getDataStackTop();
+		// Try to access the position below the stack top
+		position = StackTop.getData() + 1;
+
+		// Saved data
+		data = memory.getDataList()[position];
+
+		intbus2.put(position);
+		StackTop.store();
+
+		// Data removed from memory
+		memory.getDataList()[position] = 0;
+
+		// Bus get the data
+		intbus2.put(data);
 		PC.internalStore();
 		PC.read();
 		memory.read();
@@ -642,7 +716,18 @@ public class Architecture {
 
 		//Guardar o valor do PC
 		PC.internalRead();
-		setDataStackTop();
+		// Mem[StackTop] = dataBus
+		int position = StackTop.getData();
+		int data = intbus2.get();
+
+		memory.getDataList()[position] = data;
+
+		// StackTop points to a position above
+		intbus2.put(position-1);
+		StackTop.store();
+
+		// Replacing the data on the bus
+		intbus2.put(data);
 
 		//Pegar o valor da memória, passar pelo PC, e meter na ULA
 		PC.read();
@@ -652,7 +737,20 @@ public class Architecture {
 		ula.internalStore(0);
 
 		//Devolver o valor do PC e fazer o PC ++
-		getDataStackTop();
+		// Try to access the position below the stack top
+		position = StackTop.getData() + 1;
+
+		// Saved data
+		data = memory.getDataList()[position];
+
+		intbus2.put(position);
+		StackTop.store();
+
+		// Data removed from memory
+		memory.getDataList()[position] = 0;
+
+		// Bus get the data
+		intbus2.put(data);
 		PC.internalStore();
 
 		// PC++
@@ -696,7 +794,18 @@ public class Architecture {
 
 		//guardar o pc no Stack
 		PC.internalRead();
-		setDataStackTop();
+		// Mem[StackTop] = dataBus
+		int position = StackTop.getData();
+		int data = intbus2.get();
+
+		memory.getDataList()[position] = data;
+
+		// StackTop points to a position above
+		intbus2.put(position-1);
+		StackTop.store();
+
+		// Replacing the data on the bus
+		intbus2.put(data);
 
 		//pegar o valor da memoria e jogar na ula, atravessando o rio nilo e o PC
 		PC.read();
@@ -707,7 +816,20 @@ public class Architecture {
 		ula.internalStore(0);
 
 		//resgatar o valor do PC
-		getDataStackTop();
+		// Try to access the position below the stack top
+		position = StackTop.getData() + 1;
+
+		// Saved data
+		data = memory.getDataList()[position];
+
+		intbus2.put(position);
+		StackTop.store();
+
+		// Data removed from memory
+		memory.getDataList()[position] = 0;
+
+		// Bus get the data
+		intbus2.put(data);
 		PC.internalStore();
 
 		// PC++
@@ -1183,7 +1305,18 @@ public class Architecture {
 		// StackTop <- PC+1
 		ula.inc();
 		ula.internalRead(1);
-		setDataStackTop();
+		// Mem[StackTop] = dataBus
+		int position = StackTop.getData();
+		int data = intbus2.get();
+
+		memory.getDataList()[position] = data;
+
+		// StackTop points to a position above
+		intbus2.put(position-1);
+		StackTop.store();
+
+		// Replacing the data on the bus
+		intbus2.put(data);
 
 		// PC <- Mem
 		PC.read();
@@ -1202,7 +1335,20 @@ public class Architecture {
 			PC.internalStore();
 		}
 		else{
-			getDataStackTop();
+			// Try to access the position below the stack top
+			int position = StackTop.getData() + 1;
+
+			// Saved data
+			int data = memory.getDataList()[position];
+
+			intbus2.put(position);
+			StackTop.store();
+
+			// Data removed from memory
+			memory.getDataList()[position] = 0;
+
+			// Bus get the data
+			intbus2.put(data);
 			PC.internalStore();
 		}
 

@@ -29,7 +29,7 @@ public class TestArchitecture {
 //		inc
 //		jn point
 //		end
-		
+
 		Architecture arch = new Architecture(true);
 		arch.getMemory().getDataList()[0]=7;
 		arch.getMemory().getDataList()[1]=2;
@@ -55,7 +55,7 @@ public class TestArchitecture {
 		arch.getMemory().getDataList()[41]=0;
 		//now the program and the variables are stored. we can run
 		arch.controlUnitEexec();
-		
+
 	}
 
 	@Test
