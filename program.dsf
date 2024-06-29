@@ -1,22 +1,40 @@
 a
-b
-c
-t
-ldi 1
-move %RPG0 %RPG1
-store a
-ldi 3
-store b
-ldi 4
-store c
-read b
-store t
+move 5 %RPG0
+move 2 %RPG1
+move %RPG1 a
+move &a %RPG3
+move %RPG0 %RPG2
+add %RPG0 %RPG2
+add %RPG0 a
+add &a %RPG0
+add 10 %RPG1
+inc %RPG3
+sub %RPG0 %RPG2
+sub %RPG1 a
+move &a %RPG3
+sub &a %RPG2
+sub 10 %RPG0
+move 7 %RPG0
+move 5 %RPG1
 laco:
-read b
-add t
-store b
-read a
-inc
-store a
-sub c
-jn laco
+add 1 %RPG1
+jgt %RPG0 %RPG1 laco
+move 2 %RPG0
+move 3 %RPG1
+laco:
+jeq %RPG0 %RPG1 laco
+add 5 %RPG1
+move 1 %RPG0
+move 3 %RPG1
+laco:
+add 1 %RPG0
+jlw %RPG0 %RPG1 laco
+add 5 %RPG1
+move 5 %RPG0
+move %RPG0 a
+add &a %RPG0
+call nomequalquer
+add &a %RPG0
+nomequalquer:
+add &a %RPG1
+ret
