@@ -1382,7 +1382,7 @@ public class Architecture {
 	private void registersRead() {
 		registersList.get(demux.getValue()).read();
 	}
-	
+
 	/**
 	 * This method performs an (internal) read from a register into the register list.
 	 * The register id must be in the demux bus
@@ -1390,7 +1390,7 @@ public class Architecture {
 	private void registersInternalRead() {
 		registersList.get(demux.getValue()).internalRead();
 	}
-	
+
 	/**
 	 * This method performs an (external) store toa register into the register list.
 	 * The register id must be in the demux bus
@@ -1398,13 +1398,13 @@ public class Architecture {
 	private void registersStore() {
 		registersList.get(demux.getValue()).store();
 	}
-	
+
 	/**
 	 * This method performs an (internal) store toa register into the register list.
 	 * The register id must be in the demux bus
 	 */
 	private void registersInternalStore() {
-		registersList.get(demux.getValue()).internalStore();;
+		registersList.get(demux.getValue()).internalStore();
 	}
 
 
@@ -1414,31 +1414,32 @@ public class Architecture {
 	 * stores it into the memory
 	 * NOT TESTED
 	 * @param filename
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void readExec(String filename) throws IOException {
-		   BufferedReader br = new BufferedReader(new		 
-		   FileReader(filename+".dxf"));
-		   String linha;
-		   int i=0, ok=0;
-		   int position_Stack;
+		BufferedReader br = new BufferedReader(new
+				FileReader(filename+".dxf"));
+		String linha;
+		int i=0, ok=0;
+		int position_Stack;
 
-		   while ((linha = br.readLine()) != null) {
-			   if (ok!=-1) {
-				   extbus1.put(i);
-				   memory.store();
-				   ok = Integer.parseInt(linha);
-				   extbus1.put(ok);
-				   memory.store();
-				   i++;
-			   }
-			   else {
-				   // Guarda a posição da Stack e a inicializa
-				   position_Stack = Integer.parseInt(linha);
-				   initializeStack(position_Stack);
-			   }
+		while((linha = br.readLine()) != null) {
+			if (ok!=-1) {
+				extbus1.put(i);
+				memory.store();
+				ok = Integer.parseInt(linha);
+				extbus1.put(ok);
+				memory.store();
+				i++;
 			}
-			br.close();
+			else {
+				// Guarda a posição da Stack e a inicializa
+				position_Stack = Integer.parseInt(linha);
+				initializeStack(position_Stack);
+			}
+		}
+
+		br.close();
 	}
 
 	protected void initializeStack(int position) {
@@ -1446,7 +1447,7 @@ public class Architecture {
 		StackTop.store();
 		StackBottom.store();
 	}
-	
+
 	/**
 	 * This method executes a program that is stored in the memory
 	 */
@@ -1457,7 +1458,7 @@ public class Architecture {
 			decodeExecute();
 		}
 	}
-	
+
 
 	/**
 	 * This method implements The decode proccess,
@@ -1467,8 +1468,9 @@ public class Architecture {
 	 */
 	private void decodeExecute() {
 		IR.internalRead(); //the instruction is in the internalbus2
-		int command = intbus2.get();
+		int command = extbus1.get();
 		simulationDecodeExecuteBefore(command);
+
 		switch (command) {
 			case 0: addRegReg(); break;
 			case 1: addMemReg(); break;
@@ -1501,6 +1503,7 @@ public class Architecture {
 
 			default: halt = true; break;
 		}
+
 		if (simulation)
 			simulationDecodeExecuteAfter();
 	}
@@ -1508,7 +1511,7 @@ public class Architecture {
 	/**
 	 * This method is used to show the components status in simulation conditions
 	 * NOT TESTED
-	 * @param command 
+	 * @param command
 	 */
 	private void simulationDecodeExecuteBefore(int command) {
 		System.out.println("----------BEFORE Decode and Execute phases--------------");
@@ -1551,7 +1554,7 @@ public class Architecture {
 
 	/**
 	 * This method is used to show the components status in simulation conditions
-	 * NOT TESTED 
+	 * NOT TESTED
 	 */
 	private void simulationDecodeExecuteAfter() {
 		String instruction;
@@ -1596,22 +1599,29 @@ public class Architecture {
 	 * This method is used to show in a correct way the operands (if there is any) of instruction,
 	 * when in simulation mode
 	 * NOT TESTED!!!!!
-	 * @param instruction 
+	 * @param instruction
 	 * @return
 	 */
 	private boolean hasOperands(String instruction) {
-		if ("inc".equals(instruction)) //inc is the only one instruction having no operands
+		if ("ret".equals(instruction))   //ret is the only one instruction having no operands
 			return false;
 		else
 			return true;
 	}
 
 	private boolean hasOneOperand(int command) {
-        return command >= 12 && command <= 15 || command == 20;
+		if (command>=12 && command<=15 ||
+				command==20)
+			return true;
+		else
+			return false;
 	}
 
 	private boolean hasTwoOperands(int command) {
-        return command >= 0 && command <= 11;
+		if (command>=0 && command<=11)
+			return true;
+		else
+			return false;
 	}
 
 	/**
@@ -1623,13 +1633,10 @@ public class Architecture {
 	public int getMemorySize() {
 		return memorySize;
 	}
-	
+
 	public static void main(String[] args) throws IOException {
 		Architecture arch = new Architecture(true);
-//		arch.readExec("program");
-		arch.readExec("testFile");
+		arch.readExec("program");
 		arch.controlUnitEexec();
 	}
-	
-
 }

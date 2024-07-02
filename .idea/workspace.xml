@@ -7,12 +7,7 @@
     <list default="true" id="fb43a2ce-ad51-49f5-a708-06b8d096a12a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/architecture/Architecture.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/architecture/Architecture.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/assembler/Assembler.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/assembler/Assembler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/assembler/testAssembler.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/assembler/testAssembler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/program.dsf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/program.dxf" beforeDir="false" afterPath="$PROJECT_DIR$/program.dxf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assembler/Assembler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/assembler/Assembler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assembler/testAssembler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/assembler/testAssembler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/architecture/Architecture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/architecture/Architecture.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,45 +25,45 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Architecture.executor": "Run",
-    "Application.Assembler.executor": "Run",
-    "JUnit.TestArchitecture.executor": "Run",
-    "JUnit.TestArchitecture.testAddImmReg.executor": "Run",
-    "JUnit.TestArchitecture.testAddMemReg.executor": "Run",
-    "JUnit.TestArchitecture.testAddRegMem.executor": "Run",
-    "JUnit.TestArchitecture.testAddRegReg.executor": "Run",
-    "JUnit.TestArchitecture.testFillCommandsList.executor": "Run",
-    "JUnit.TestArchitecture.testInc.executor": "Run",
-    "JUnit.TestArchitecture.testJmp.executor": "Run",
-    "JUnit.TestArchitecture.testJn.executor": "Run",
-    "JUnit.TestArchitecture.testJz.executor": "Run",
-    "JUnit.TestArchitecture.testMoveImmReg.executor": "Run",
-    "JUnit.TestArchitecture.testMoveMemReg.executor": "Run",
-    "JUnit.TestArchitecture.testMoveRegMem.executor": "Run",
-    "JUnit.TestArchitecture.testMoveRegReg.executor": "Run",
-    "JUnit.TestArchitecture.testReadExec.executor": "Run",
-    "JUnit.TestArchitecture.testSubImmReg.executor": "Run",
-    "JUnit.TestArchitecture.testSubMemReg.executor": "Run",
-    "JUnit.TestArchitecture.testSubRegMem.executor": "Run",
-    "JUnit.TestArchitecture.testSubRegReg.executor": "Run",
-    "JUnit.testAssembler.executor": "Run",
-    "JUnit.testAssembler.testParse.executor": "Run",
-    "JUnit.testAssembler.testProccessCommand.executor": "Run",
-    "JUnit.testAssembler.testReplaceRegisters.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/apps/architecture-oac"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Architecture.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Assembler.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testAddImmReg.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testAddMemReg.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testAddRegMem.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testAddRegReg.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testFillCommandsList.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testInc.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testJmp.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testJn.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testJz.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testMoveImmReg.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testMoveMemReg.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testMoveRegMem.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testMoveRegReg.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testReadExec.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testSubImmReg.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testSubMemReg.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testSubRegMem.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestArchitecture.testSubRegReg.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.testAssembler.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.testAssembler.testParse.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.testAssembler.testProccessCommand.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.testAssembler.testReplaceRegisters.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/apps/architecture-oac&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\apps\architecture-oac" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.testAssembler">
+  <component name="RunManager" selected="Application.Architecture">
     <configuration name="Architecture" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="JavaSE-1.7" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -162,8 +157,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.testAssembler" />
         <item itemvalue="Application.Assembler" />
+        <item itemvalue="JUnit.testAssembler" />
         <item itemvalue="JUnit.testAssembler.testProccessCommand" />
         <item itemvalue="JUnit.testAssembler.testReplaceRegisters" />
         <item itemvalue="JUnit.testAssembler.testParse" />
