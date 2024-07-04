@@ -246,10 +246,10 @@ public class Architecture {
 
 		// RegB <- Resultado da soma (Ula+)
 		ula.internalRead(1);		 // lê o valor da ula e guarda no internal bus
-		setStatusFlags(intbus2.get());	 // verifica o resultado
+		setStatusFlags(intbus2.get());	 // verifica o resultado - muda o status flag a depender do valor
 		ula.read(1);				 // lê o valor da ula e guarda no external bus
 		demux.setValue(extbus1.get());   // aponta para o registrador correto
-		registersInternalStore();
+		registersInternalStore();		 // começa a leitura do registrador
 
 		// PC++
 		PC.internalRead();				// copia os dados do PC para o internal bus
@@ -327,10 +327,10 @@ public class Architecture {
 
 		// RegA <- Ula+
 		ula.internalRead(1);		// lê valor do RPG1
-		setStatusFlags(intbus2.get());	// verifica valor retornada da soma
+		setStatusFlags(intbus2.get());	// verifica valor retornada da soma - muda o status flag a depender do valor
 		ula.read(1);				// guarda o resultado no external bus
-		demux.setValue(extbus1.get());
-		registersInternalStore();
+		demux.setValue(extbus1.get());  // aponta para o registrador correto
+		registersInternalStore();		// escreve no registrador
 
 		// PC++
 		PC.internalRead();				// copia os dados do PC para o internal bus
@@ -348,7 +348,7 @@ public class Architecture {
 		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		// Pega o valor do registrador e guardar na ULA
+		// Pega o valor do registrador e guarda na ULA
 		PC.read();
 		memory.read();
 		demux.setValue(extbus1.get());
@@ -386,7 +386,7 @@ public class Architecture {
 		PC.internalRead();
 		ula.internalStore(1);
 
-		// Fazer o add, passar o valor da soma pelo pc, e guardar no IR
+		// Realiza a soma, passa o valor da soma para o PC e guarda no IR
 		ula.add();
 		ula.internalRead(1);
 		setStatusFlags(intbus2.get());
@@ -432,7 +432,7 @@ public class Architecture {
 		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		// Guardar o valor do PC
+		// Guarda o valor do PC no internal bus
 		PC.internalRead();
 
 		// Mem[StackTop] = dataBus
@@ -441,11 +441,11 @@ public class Architecture {
 
 		memory.getDataList()[position] = data;
 
-		// StackTop points to a position above
+		// StackTop aponta para uma posição acima
 		intbus2.put(position-1);
 		StackTop.store();
 
-		// Replacing the data on the bus
+		// Substitui o dado no internal bus
 		intbus2.put(data);
 
 		// Pega o valor da memória, passa pelo PC e guarda na ULA
@@ -455,7 +455,7 @@ public class Architecture {
 		PC.internalRead();
 		ula.internalStore(0);
 
-		// Devolve o valor do PC e faz o PC ++
+		// Devolve o valor do PC e faz o PC++
 		// Tenta acessar a posição abaixo do StackTop
 		position = StackTop.getData() + 1;
 
@@ -482,8 +482,8 @@ public class Architecture {
 		// Pega o ID do registrador e joga seu valor na ULA
 		PC.read();
 		memory.read();
-		demux.setValue(extbus1.get()); //points to the correct register
-		registersInternalRead(); //starts the read from the register
+		demux.setValue(extbus1.get()); 	// aponta para o registrador correto
+		registersInternalRead(); 		// começa a leitura do registrador
 		ula.store(1);
 
 		// Realiza a soma e passa o valor da soma para o registrador
@@ -491,8 +491,8 @@ public class Architecture {
 		ula.internalRead(1);
 		setStatusFlags(intbus2.get());
 		ula.read(1);
-		demux.setValue(extbus1.get()); // aponta para o registrador correto
-		registersInternalStore(); // começa a leitura do registrador
+		demux.setValue(extbus1.get()); 	// aponta para o registrador correto
+		registersInternalStore(); 		// começa a leitura do registrador
 
 		// PC++
 		PC.internalRead();				// copia os dados do PC para o internal bus
@@ -513,9 +513,9 @@ public class Architecture {
 
 		// Ula(0) <- RegA
 		PC.read();
-		memory.read();                   // the second register
-		demux.setValue(extbus1.get());   // points to the correct register
-		registersInternalRead();         // starts the read from the register
+		memory.read();                   // o segundo registrador
+		demux.setValue(extbus1.get());   // aponta para o segundo registrador
+		registersInternalRead();         // começa a leitura do registrador
 		ula.store(0);
 
 		// PC++
@@ -525,21 +525,21 @@ public class Architecture {
 		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		// Ula(1) <- REGB
+		// Ula(1) <- RegB
 		PC.read();
-		memory.read();                  // the second register
-		demux.setValue(extbus1.get());  // points to the correct register
-		registersInternalRead();        // starts the read from the register
+		memory.read();                  // o segundo registrador
+		demux.setValue(extbus1.get());  // aponta para o registrador correto
+		registersInternalRead();        // começa a leitura do registrador
 		ula.store(1);
 
-		ula.sub();
+		ula.sub();						// realiza a subtração e armazena o valor registrador
 
-		// RegB <- UlaSub
+		// RegB <- Ula-
 		ula.internalRead(1);
 		setStatusFlags(intbus2.get());
 		ula.read(1);
-		demux.setValue(extbus1.get());  // points to the correct register
-		registersInternalStore();
+		demux.setValue(extbus1.get());  // aponta para o registrador correto
+		registersInternalStore();		// escreve no registrador
 
 		// PC++
 		PC.internalRead();				// copia os dados do PC para o internal bus
@@ -559,41 +559,42 @@ public class Architecture {
 
 		// StackTop <- PC
 		PC.internalRead();
+
 		// Mem[StackTop] = dataBus
 		int position = StackTop.getData();
 		int data = intbus2.get();
 
 		memory.getDataList()[position] = data;
 
-		// StackTop points to a position above
-		intbus2.put(position-1);
+		// StackTop aponta para uma posição acima
+		intbus2.put(position - 1);
 		StackTop.store();
 
-		// Replacing the data on the bus
+		// Substitui o dado no internal bus
 		intbus2.put(data);
 
 		// Ula(0) <- Mem
-		PC.read();
-		memory.read();      // the second register
+		PC.read();					// pega o dado de PC e armazena em external bus
+		memory.read();     			// o segundo registrador
 		memory.read();
-		PC.store();
-		PC.internalRead();
-		ula.internalStore(0);
+		PC.store();					// armazena o endereço salvo no external bus
+		PC.internalRead();			// copia o endereço de PC para o internal bus
+		ula.internalStore(0);	// copia o dado do internal bus para o Reg0
 
 		// PC <- StackTop
-		// Try to access the position below the stack top
+		// Tenta acessar a posição abaixo do StackTop
 		position = StackTop.getData() + 1;
 
-		// Saved data
+		// Recupear o dado salvo
 		data = memory.getDataList()[position];
 
 		intbus2.put(position);
 		StackTop.store();
 
-		// Data removed from memory
+		// Remove dado da memória
 		memory.getDataList()[position] = 0;
 
-		// Bus get the data
+		// internal bus salva o dado
 		intbus2.put(data);
 		PC.internalStore();
 
@@ -604,20 +605,20 @@ public class Architecture {
 		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		// Ula(1) <- REGA
+		// Ula(1) <- RegA
 		PC.read();
-		memory.read();                  // the second register
-		demux.setValue(extbus1.get());  //points to the correct register
-		registersInternalRead();        //starts the read from the register
+		memory.read();                  // o segundo registrador
+		demux.setValue(extbus1.get());  // aponta para o registrador correto
+		registersInternalRead();        // inicia a leitura do registrador
 		ula.store(1);
 
-		ula.sub();
+		ula.sub();						// realiza a operação de subtração
 
-		// REGB <- UlaSub
+		// RegB <- Ula-
 		ula.internalRead(1);
 		setStatusFlags(intbus2.get());
 		ula.read(1);
-		demux.setValue(extbus1.get());  //points to the correct register
+		demux.setValue(extbus1.get());  // aponta para o registrador correto
 		registersInternalStore();
 
 		// PC++
@@ -636,7 +637,7 @@ public class Architecture {
 		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		//Pegar o valor do registrador e guardar na ULA
+		// Pega o valor do registrador correto e guarda na ULA
 		PC.read();
 		memory.read();
 		demux.setValue(extbus1.get());
@@ -650,22 +651,23 @@ public class Architecture {
 		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		//Guardar o valor do PC
+		// Guarda o valor do PC
 		PC.internalRead();
+
 		// Mem[StackTop] = dataBus
 		int position = StackTop.getData();
 		int data = intbus2.get();
 
 		memory.getDataList()[position] = data;
 
-		// StackTop points to a position above
-		intbus2.put(position-1);
+		// StackTop aponta para uma posição acima
+		intbus2.put(position - 1);
 		StackTop.store();
 
-		// Replacing the data on the bus
+		// Substitui o dado no internal bus
 		intbus2.put(data);
 
-		//Pegar o valor da memória, passar pelo PC, e meter na ULA
+		// Pega o valor da memória, passa pelo PC e guarda na ULA
 		PC.read();
 		memory.read();
 		memory.read();
@@ -673,7 +675,7 @@ public class Architecture {
 		PC.internalRead();
 		ula.internalStore(1);
 
-		//Fazer o sub, e passar o valor da soma, pelo pc, e guardar no IR
+		// Realiza a subtração, passa o valor da soma pelo pc e guarda no IR
 		ula.sub();
 		ula.internalRead(1);
 		setStatusFlags(intbus2.get());
@@ -681,20 +683,20 @@ public class Architecture {
 		PC.read();
 		IR.store();
 
-		//Devolver o valor do PC, e pegar o endereço para armazenar o valor da soma
-		// Try to access the position below the stack top
+		// Devolve o valor do PC e pega o endereço para armazenar o valor da soma
+		// Tenta acessar a posição abaixo do StackTop
 		position = StackTop.getData() + 1;
 
-		// Saved data
+		// Dado salvo
 		data = memory.getDataList()[position];
 
 		intbus2.put(position);
 		StackTop.store();
 
-		// Data removed from memory
+		// Remove dado da memória
 		memory.getDataList()[position] = 0;
 
-		// Bus get the data
+		// Internal busa guarda o dado
 		intbus2.put(data);
 		PC.internalStore();
 		PC.read();
@@ -719,15 +721,16 @@ public class Architecture {
 		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		//Guardar o valor do PC
+		// Guarda o valor do PC no internal bus
 		PC.internalRead();
+
 		// Mem[StackTop] = dataBus
 		int position = StackTop.getData();
 		int data = intbus2.get();
 
 		memory.getDataList()[position] = data;
 
-		// StackTop points to a position above
+		// StackTop aponta para uma posição acima
 		intbus2.put(position-1);
 		StackTop.store();
 
@@ -768,8 +771,8 @@ public class Architecture {
 		//Pegar o ID do registrador e jogar seu valor na ULA
 		PC.read();
 		memory.read();
-		demux.setValue(extbus1.get()); //points to the correct register
-		registersInternalRead(); //starts the read from the register
+		demux.setValue(extbus1.get()); 	// aponta para o registrador correto
+		registersInternalRead(); 	   	// começa a leitura do registrador
 		ula.store(1);
 
 		//Fazer o sub, e passar o valor da soma para o registrador
@@ -777,8 +780,8 @@ public class Architecture {
 		ula.internalRead(1);
 		setStatusFlags(intbus2.get());
 		ula.read(1);
-		demux.setValue(extbus1.get()); //points to the correct register
-		registersInternalStore(); //starts the read from the register
+		demux.setValue(extbus1.get()); 	// aponta para o registrador correto
+		registersInternalStore(); 		// escreve no registrador
 
 		// PC++
 		PC.internalRead();				// copia os dados do PC para o internal bus
@@ -797,8 +800,9 @@ public class Architecture {
 		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		//guardar o pc no Stack
+		// Guarda o valor de PC no StackTop
 		PC.internalRead();
+
 		// Mem[StackTop] = dataBus
 		int position = StackTop.getData();
 		int data = intbus2.get();
@@ -809,10 +813,10 @@ public class Architecture {
 		intbus2.put(position-1);
 		StackTop.store();
 
-		// Replacing the data on the bus
+		// Substitui o dado no internal bus
 		intbus2.put(data);
 
-		//pegar o valor da memoria e jogar na ula, atravessando o rio nilo e o PC
+		// Pega o valor da memoria e joga na ula, atravessando o rio nilo e o PC
 		PC.read();
 		memory.read();
 		memory.read();
@@ -820,20 +824,20 @@ public class Architecture {
 		PC.internalRead();
 		ula.internalStore(0);
 
-		//resgatar o valor do PC
-		// Try to access the position below the stack top
+		// Resgata o valor do PC
+		// Tenta acessar a posição abaixo do StackTop
 		position = StackTop.getData() + 1;
 
-		// Saved data
+		// Recupera o dado salvo
 		data = memory.getDataList()[position];
 
 		intbus2.put(position);
 		StackTop.store();
 
-		// Data removed from memory
+		// Remove o dado da memória
 		memory.getDataList()[position] = 0;
 
-		// Bus get the data
+		// Internal bus salvo o dado
 		intbus2.put(data);
 		PC.internalStore();
 
@@ -844,7 +848,7 @@ public class Architecture {
 		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		//jogar o valor da memoria no registrador
+		// Joga o valor da memória no registrador
 		ula.read(0);
 		PC.read();
 		memory.read();
@@ -867,7 +871,7 @@ public class Architecture {
 		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		//pegar o id do registrador, e aguardar o comando
+		// Pega o id do registrador e aguarda o comando
 		PC.read();
 		memory.read();
 		demux.setValue(extbus1.get());
@@ -903,10 +907,10 @@ public class Architecture {
 		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		PC.read();
-		memory.read();
-		demux.setValue(extbus1.get());
-		registersInternalRead();
+		PC.read();						// armazena endereço que PC aponta no external bus
+		memory.read();					// armazena valor da memória no external bus
+		demux.setValue(extbus1.get());	// aponta para o registrador correto
+		registersInternalRead();		// inicia a leitura do registrador
 		ula.store(0);
 
 		// PC++
@@ -916,11 +920,11 @@ public class Architecture {
 		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		PC.read();
-		memory.read();
-		demux.setValue(extbus1.get());
-		ula.read(0);
-		registersInternalStore();
+		PC.read();						// armazena endereço que PC aponta no external bus
+		memory.read();					// armazena valor da memória no external bus
+		demux.setValue(extbus1.get());	// aponta para o registrador correto
+		ula.read(0);				// lê dado armazenado no RPG0 (RegA)
+		registersInternalStore();		// inicia a escrita no RPG1 (RegB)
 
 		// PC++
 		PC.internalRead();				// copia os dados do PC para o internal bus
@@ -972,19 +976,19 @@ public class Architecture {
 		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		// Ula(1) <- REGA
+		// Ula(1) <- RegA
 		PC.read();
 		memory.read();
-		demux.setValue(extbus1.get());   //points to the correct register
+		demux.setValue(extbus1.get());   // aponta para o registrador correto
 		registersInternalRead();
 		ula.store(1);
 
 		ula.inc();
 
-		// REGA <- UlaInc
+		// RegA <- Ula++
 		ula.read(1);
 		setStatusFlags(intbus1.get());
-		demux.setValue(extbus1.get());   //points to the correct register
+		demux.setValue(extbus1.get());   // aponta para o registrador correto
 		registersInternalStore();
 
 		// PC++
@@ -1065,9 +1069,9 @@ public class Architecture {
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
-		memory.read(); // the second register
-		demux.setValue(extbus1.get()); //points to the correct register
-		registersInternalRead(); //starts the read from the register
+		memory.read(); 					// o segundo registrador
+		demux.setValue(extbus1.get()); 	// aponta para o registrador correto
+		registersInternalRead(); 		// começa a aleitura do registrador
 		ula.store(0);
 
 		// PC++
@@ -1078,9 +1082,9 @@ public class Architecture {
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
-		memory.read(); // the second register
-		demux.setValue(extbus1.get()); //points to the correct register
-		registersInternalRead(); //starts the read from the register
+		memory.read(); 					// o segundo registrador
+		demux.setValue(extbus1.get()); 	// aponta para o registrador correto
+		registersInternalRead(); 		// começa a leitura do registrador
 
 		ula.store(1);
 		ula.sub();
@@ -1125,9 +1129,9 @@ public class Architecture {
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
-		memory.read(); // the second register
-		demux.setValue(extbus1.get()); //points to the correct register
-		registersInternalRead(); //starts the read from the register
+		memory.read(); 					// o segundo registrador
+		demux.setValue(extbus1.get()); 	// aponta para o registrador correto
+		registersInternalRead(); 		// começa a leitura do registrador
 		ula.store(0);
 
 		// PC++
@@ -1138,16 +1142,16 @@ public class Architecture {
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
-		memory.read(); // the second register
-		demux.setValue(extbus1.get()); //points to the correct register
-		registersInternalRead(); //starts the read from the register
+		memory.read(); 					// o segundo registrador
+		demux.setValue(extbus1.get()); 	// aponta para o registrador correto
+		registersInternalRead(); 		// começa a leitura do registrador
 
 		ula.store(1);
 		ula.sub();
 		ula.internalRead(1);
 		setStatusFlags(intbus2.get());
 
-		if (Flags.getBit(0)!=1){
+		if (Flags.getBit(0) != 1){
 			// PC++
 			PC.internalRead();				// copia os dados do PC para o internal bus
 			ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
@@ -1185,9 +1189,9 @@ public class Architecture {
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
-		memory.read(); // the second register
-		demux.setValue(extbus1.get()); //points to the correct register
-		registersInternalRead(); //starts the read from the register
+		memory.read(); 					// o segundo registrador
+		demux.setValue(extbus1.get()); 	// aponta para o registrador correto
+		registersInternalRead(); 		// começa a leitura do registrador
 		ula.store(0);
 
 		// PC++
@@ -1198,9 +1202,9 @@ public class Architecture {
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
-		memory.read(); // the second register
-		demux.setValue(extbus1.get()); //points to the correct register
-		registersInternalRead(); //starts the read from the register
+		memory.read(); 					// o segundo registrador
+		demux.setValue(extbus1.get()); 	// aponta para o registrador correto
+		registersInternalRead(); 		// começa a leitura do registrador
 
 		ula.store(1);
 		ula.sub();
@@ -1245,9 +1249,9 @@ public class Architecture {
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
-		memory.read(); // the second register
-		demux.setValue(extbus1.get()); //points to the correct register
-		registersInternalRead(); //starts the read from the register
+		memory.read(); 					// o segundo registrador
+		demux.setValue(extbus1.get()); 	// aponta para o registrador correto
+		registersInternalRead(); 		// começa a leitura do registrador
 		ula.store(0);
 
 		// PC++
@@ -1258,9 +1262,9 @@ public class Architecture {
 		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
-		memory.read(); // the second register
-		demux.setValue(extbus1.get()); //points to the correct register
-		registersInternalRead(); //starts the read from the register
+		memory.read(); 					// o segundo registrador
+		demux.setValue(extbus1.get()); 	// aponta para o registrador correto
+		registersInternalRead(); 		// começa a leitura do registrador
 
 		ula.store(1);
 		ula.sub();
@@ -1308,17 +1312,18 @@ public class Architecture {
 		// StackTop <- PC+1
 		ula.inc();
 		ula.internalRead(1);
+
 		// Mem[StackTop] = dataBus
 		int position = StackTop.getData();
 		int data = intbus2.get();
 
 		memory.getDataList()[position] = data;
 
-		// StackTop points to a position above
+		// StackTop aponta para uma posição acima
 		intbus2.put(position-1);
 		StackTop.store();
 
-		// Replacing the data on the bus
+		// Substitui o dado no internal bus
 		intbus2.put(data);
 
 		// PC <- Mem (jump)
@@ -1338,23 +1343,22 @@ public class Architecture {
 			PC.internalStore();				// copia os dados do internal bus e armazena em PC
 		}
 		else{
-			// Try to access the position below the stack top
+			// Tenta acessar a posição abaixo do StackTop
 			int position = StackTop.getData() + 1;
 
-			// Saved data
+			// Recupera dado salvo
 			int data = memory.getDataList()[position];
 
 			intbus2.put(position);
 			StackTop.store();
 
-			// Data removed from memory
+			// Remove dado da memória
 			memory.getDataList()[position] = 0;
 
-			// Bus get the data
+			// Internal bus salvo o dado
 			intbus2.put(data);
 			PC.internalStore();
 		}
-
 	}
 
 

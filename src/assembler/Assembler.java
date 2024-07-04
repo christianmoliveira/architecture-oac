@@ -335,13 +335,13 @@ public class Assembler {
 		String p2 = tokens[2];
 		int p=-1;
 
-		if ((p1.startsWith("%")) && (p2.startsWith("%")))    //this is a addRegReg command
+		if ((p1.startsWith("%")) && (p2.startsWith("%")))    	// this is a addRegReg command
 			p = commands.indexOf("subRegReg");
-		else if (p1.startsWith("&"))                       //this is a subMemReg command
+		else if (p1.startsWith("&"))                       		// this is a subMemReg command
 			p = commands.indexOf("subMemReg");
-		else if (p1.startsWith("%"))                       //this is a subRegMem command
+		else if (p1.startsWith("%"))                       		// this is a subRegMem command
 			p = commands.indexOf("subRegMem");
-		else                                               //this is a subImmReg command
+		else                                               		// this is a subImmReg command
 			p = commands.indexOf("subImmReg");
 
 		return p;
