@@ -7,8 +7,6 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import components.Memory;
-
 public class TestArchitecture {
 	
 	//uncomment the anotation below to run the architecture showing components status
