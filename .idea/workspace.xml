@@ -8,6 +8,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/architecture/Architecture.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/architecture/Architecture.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/architecture/Architecture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/architecture/Architecture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/architecture/TestArchitecture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/architecture/TestArchitecture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assembler/Assembler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/assembler/Assembler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +65,7 @@
       <recent name="C:\apps\architecture-oac" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Architecture">
+  <component name="RunManager" selected="JUnit.TestArchitecture.testAddMemReg">
     <configuration name="Architecture" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="JavaSE-1.7" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -92,6 +94,54 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="TestArchitecture.testAddMemReg" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="S_Architecture" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="architecture.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="architecture" />
+      <option name="MAIN_CLASS_NAME" value="architecture.TestArchitecture" />
+      <option name="METHOD_NAME" value="testAddMemReg" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestArchitecture.testAddRegReg" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="S_Architecture" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="architecture.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="architecture" />
+      <option name="MAIN_CLASS_NAME" value="architecture.TestArchitecture" />
+      <option name="METHOD_NAME" value="testAddRegReg" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestArchitecture.testJmp" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="S_Architecture" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="architecture.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="architecture" />
+      <option name="MAIN_CLASS_NAME" value="architecture.TestArchitecture" />
+      <option name="METHOD_NAME" value="testJmp" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="testAssembler" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="S_Architecture" />
       <extension name="coverage">
@@ -107,61 +157,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="testAssembler.testParse" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="S_Architecture" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="assembler.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="assembler" />
-      <option name="MAIN_CLASS_NAME" value="assembler.testAssembler" />
-      <option name="METHOD_NAME" value="testParse" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="testAssembler.testProccessCommand" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="S_Architecture" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="assembler.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="assembler" />
-      <option name="MAIN_CLASS_NAME" value="assembler.testAssembler" />
-      <option name="METHOD_NAME" value="testProccessCommand" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="testAssembler.testReplaceRegisters" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="S_Architecture" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="assembler.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="assembler" />
-      <option name="MAIN_CLASS_NAME" value="assembler.testAssembler" />
-      <option name="METHOD_NAME" value="testReplaceRegisters" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.TestArchitecture.testAddMemReg" />
+        <item itemvalue="JUnit.TestArchitecture.testJmp" />
+        <item itemvalue="JUnit.TestArchitecture.testAddRegReg" />
         <item itemvalue="Application.Assembler" />
         <item itemvalue="JUnit.testAssembler" />
-        <item itemvalue="JUnit.testAssembler.testProccessCommand" />
-        <item itemvalue="JUnit.testAssembler.testReplaceRegisters" />
-        <item itemvalue="JUnit.testAssembler.testParse" />
       </list>
     </recent_temporary>
   </component>

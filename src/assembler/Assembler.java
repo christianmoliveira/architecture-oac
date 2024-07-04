@@ -291,8 +291,8 @@ public class Assembler {
 	}
 
 	/**
-	 * This method proccess a move command.
-	 * It must have differents formats, meaning differents internal commands
+	 * This method process a move command.
+	 * It must have different formats, meaning different internal commands
 	 * @param tokens
 	 * @return
 	 */
@@ -301,13 +301,13 @@ public class Assembler {
 		String p2 = tokens[2];
 		int p=-1;
 
-		if ((p1.startsWith("%"))&&(p2.startsWith("%")))    // this is a moveRegReg comand
+		if ((p1.startsWith("%"))&&(p2.startsWith("%")))    // this is a moveRegReg command
 			p = commands.indexOf("moveRegReg");
-		else if(p1.startsWith("&"))                        // this is a moveMemReg comand
+		else if(p1.startsWith("&"))                        // this is a moveMemReg command
 			p = commands.indexOf("moveMemReg");
-		else if (p1.startsWith("%"))                       // this is a moveRegMem comand
+		else if (p1.startsWith("%"))                       // this is a moveRegMem command
 			p = commands.indexOf("moveRegMem");
-		else                                                // this is a moveImmReg comand
+		else                                                // this is a moveImmReg command
 			p = commands.indexOf("moveImmReg");
 
 		return p;
@@ -318,13 +318,13 @@ public class Assembler {
 		String p2 = tokens[2];
 		int p=-1;
 
-		if ((p1.startsWith("%"))&&(p2.startsWith("%")))    //this is a addRegReg comand
+		if ((p1.startsWith("%"))&&(p2.startsWith("%")))    //this is a addRegReg command
 			p = commands.indexOf("addRegReg");
-		else if (p1.startsWith("&"))                       //this is a addMemReg comand
+		else if (p1.startsWith("&"))                       //this is a addMemReg command
 			p = commands.indexOf("addMemReg");
-		else if (p1.startsWith("%"))                       //this is a addRegMem comand
+		else if (p1.startsWith("%"))                       //this is a addRegMem command
 			p = commands.indexOf("addRegMem");
-		else                                               // this is a moveImmReg comand
+		else                                               // this is a moveImmReg command
 			p = commands.indexOf("addImmReg");
 
 		return p;
@@ -335,13 +335,13 @@ public class Assembler {
 		String p2 = tokens[2];
 		int p=-1;
 
-		if ((p1.startsWith("%"))&&(p2.startsWith("%")))    //this is a addRegReg comand
+		if ((p1.startsWith("%")) && (p2.startsWith("%")))    //this is a addRegReg command
 			p = commands.indexOf("subRegReg");
-		else if (p1.startsWith("&"))                       //this is a subMemReg comand
+		else if (p1.startsWith("&"))                       //this is a subMemReg command
 			p = commands.indexOf("subMemReg");
-		else if (p1.startsWith("%"))                       //this is a subRegMem comand
+		else if (p1.startsWith("%"))                       //this is a subRegMem command
 			p = commands.indexOf("subRegMem");
-		else                                               //this is a subImmReg comand
+		else                                               //this is a subImmReg command
 			p = commands.indexOf("subImmReg");
 
 		return p;

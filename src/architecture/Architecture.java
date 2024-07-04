@@ -214,138 +214,141 @@ public class Architecture {
 	// Add commands
 	protected void addRegReg() {
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		// Ula(0) <- RegA
 		PC.read();
-		memory.read();                  // the second register
-		demux.setValue(extbus1.get());  // points to the correct register
-		registersInternalRead();        // starts the read from the register
-		ula.store(0);
+		memory.read();                  // o segundo registrador
+		demux.setValue(extbus1.get());  // aponta para o registrador correto
+		registersInternalRead();        // começa a leitura do registrador selecionado
+		ula.store(0);				// armazena o valor do external bus no RegA (RPG0)
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		// Ula(1) <- RegB
+		// Pega o ID do registrador e joga seu valor na ULA
 		PC.read();
-		memory.read();                  // the second register
-		demux.setValue(extbus1.get());  // points to the correct register
-		registersInternalRead();        // starts the read from the register
-		ula.store(1);
+		memory.read();                  // o segundo registrador
+		demux.setValue(extbus1.get());  // aponta para o registrador correto
+		registersInternalRead();        // começa a leitura do registrador
+		ula.store(1);				// armazena o valor do external bus no RegB (RPG1)
 
-		ula.add();
+		ula.add();						// ula soma e escreve em RegB (RPG1)
 
-		// RegB <- UlaAdd
-		ula.internalRead(1);
-		setStatusFlags(intbus2.get());
-		ula.read(1);
-		demux.setValue(extbus1.get());   // points to the correct register
+		// RegB <- Resultado da soma (Ula+)
+		ula.internalRead(1);		 // lê o valor da ula e guarda no internal bus
+		setStatusFlags(intbus2.get());	 // verifica o resultado
+		ula.read(1);				 // lê o valor da ula e guarda no external bus
+		demux.setValue(extbus1.get());   // aponta para o registrador correto
 		registersInternalStore();
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 	}
 
 	protected void addMemReg() {
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();						// copia os dados do PC para o internal bus
+		ula.internalStore(1);				// pega o valor que tá em bus e guarda na ula
+		ula.inc();								// ula incrementa
+		ula.internalRead(1);				// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();						// copia os dados do internal bus e armazena em PC
 
-		// StackTop <- PC
-		PC.internalRead();
+		// StackTop <- PC : Guarda o dado ao qual PC aponta para uso posterior
+		PC.internalRead();						// copia o dado do PC para o internal bus
+
 		// Mem[StackTop] = dataBus
-		int position = StackTop.getData();
-		int data = intbus2.get();
+		int position = StackTop.getData();		// guarda a posição da memória ao qual PC apontava
+		int data = intbus2.get();				// guarda o dado de PC que estava em internal bus
 
-		memory.getDataList()[position] = data;
+		memory.getDataList()[position] = data;	// memoiza o dado que estava no internal bus na memória[StackTop]
 
-		// StackTop points to a position above
-		intbus2.put(position-1);
+		// StackTop aponta para uma posição de memória acima
+		intbus2.put(position - 1);
 		StackTop.store();
 
-		// Replacing the data on the bus
+		// Substitui o dado que está no internal bus
 		intbus2.put(data);
 
 		// Ula(0) <- Mem
-		PC.read();
-		memory.read();     // the second register
+		PC.read();					// pega o dado de PC e armazena em external bus
+		memory.read();     			// o segundo registrador
 		memory.read();
-		PC.store();
-		PC.internalRead();
-		ula.internalStore(0);
+		PC.store();					// armazena o endereço salvo no external bus
+		PC.internalRead();			// copia o endereço de PC para o internal bus
+		ula.internalStore(0);	// copia o dado do internal bus para o Reg0
 
 		// PC <- StackTop
-		// Try to access the position below the stack top
+		// Tenta acessar a posição abaixo do stack top
 		position = StackTop.getData() + 1;
 
-		// Saved data
+		// Recupera dado salvo
 		data = memory.getDataList()[position];
 
 		intbus2.put(position);
 		StackTop.store();
 
-		// Data removed from memory
+		// Remove o dado da memória
 		memory.getDataList()[position] = 0;
 
-		// Bus get the data
+		// internal bus pega o dado e PC lê em seguida
 		intbus2.put(data);
 		PC.internalStore();
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		// Ula(1) <- REGA
+		// Ula(1) <- RegA
+		// Pega o ID do registrador e joga seu valor na ULA
 		PC.read();
-		memory.read();                  // the second register
-		demux.setValue(extbus1.get());  //points to the correct register
-		registersInternalRead();        //starts the read from the register
-		ula.store(1);
+		memory.read();                  // o segundo registrador
+		demux.setValue(extbus1.get());  // aponta para o registrador correto
+		registersInternalRead();        // começa a leitura do registrador
+		ula.store(1);				// copia o dado do external bus para o Reg1
 
-		ula.add();
+		ula.add();						// ula soma e escreve em RPG1
 
-		// REGA <- UlaAdd
-		ula.internalRead(1);
-		setStatusFlags(intbus2.get());
-		ula.read(1);
-		demux.setValue(extbus1.get()); //points to the correct register
+		// RegA <- Ula+
+		ula.internalRead(1);		// lê valor do RPG1
+		setStatusFlags(intbus2.get());	// verifica valor retornada da soma
+		ula.read(1);				// guarda o resultado no external bus
+		demux.setValue(extbus1.get());
 		registersInternalStore();
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 	}
 
 	protected void addRegMem() {
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		//Pegar o valor do registrador e guardar na ULA
+		// Pega o valor do registrador e guardar na ULA
 		PC.read();
 		memory.read();
 		demux.setValue(extbus1.get());
@@ -353,28 +356,29 @@ public class Architecture {
 		ula.store(0);
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		//Guardar o valor do PC
+		// Guarda o valor de PC no stack top
 		PC.internalRead();
+
 		// Mem[StackTop] = dataBus
 		int position = StackTop.getData();
 		int data = intbus2.get();
 
 		memory.getDataList()[position] = data;
 
-		// StackTop points to a position above
-		intbus2.put(position-1);
+		// StackTop aponta para uma posição acima
+		intbus2.put(position - 1);
 		StackTop.store();
 
-		// Replacing the data on the bus
+		// Substituindo o dado do internal bus
 		intbus2.put(data);
 
-		//Pegar o valor da memória, passar pelo PC, e meter na ULA
+		// Pega o valor da memória, passa pelo PC e joga na ULA (RPG1)
 		PC.read();
 		memory.read();
 		memory.read();
@@ -382,7 +386,7 @@ public class Architecture {
 		PC.internalRead();
 		ula.internalStore(1);
 
-		//Fazer o add, e passar o valor da soma, pelo pc, e guardar no IR
+		// Fazer o add, passar o valor da soma pelo pc, e guardar no IR
 		ula.add();
 		ula.internalRead(1);
 		setStatusFlags(intbus2.get());
@@ -390,20 +394,20 @@ public class Architecture {
 		PC.read();
 		IR.store();
 
-		//Devolver o valor do PC, e pegar o endereço para armazenar o valor da soma
-		// Try to access the position below the stack top
+		// Devolve o valor do PC e pega o endereço para armazenar o valor da soma
+		// Tenta acessar a posição abaixo do StackTop
 		position = StackTop.getData() + 1;
 
-		// Saved data
+		// Dado salvo
 		data = memory.getDataList()[position];
 
 		intbus2.put(position);
 		StackTop.store();
 
-		// Data removed from memory
+		// Dado removido da memória
 		memory.getDataList()[position] = 0;
 
-		// Bus get the data
+		// Internal bus guarda o dado
 		intbus2.put(data);
 		PC.internalStore();
 		PC.read();
@@ -413,23 +417,24 @@ public class Architecture {
 		memory.store();
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 	}
 
 	protected void addImmReg() {
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		//Guardar o valor do PC
+		// Guardar o valor do PC
 		PC.internalRead();
+
 		// Mem[StackTop] = dataBus
 		int position = StackTop.getData();
 		int data = intbus2.get();
@@ -443,114 +448,114 @@ public class Architecture {
 		// Replacing the data on the bus
 		intbus2.put(data);
 
-		//Pegar o valor da memória, passar pelo PC, e meter na ULA
+		// Pega o valor da memória, passa pelo PC e guarda na ULA
 		PC.read();
 		memory.read();
 		PC.store();
 		PC.internalRead();
 		ula.internalStore(0);
 
-		//Devolver o valor do PC e fazer o PC ++
-		// Try to access the position below the stack top
+		// Devolve o valor do PC e faz o PC ++
+		// Tenta acessar a posição abaixo do StackTop
 		position = StackTop.getData() + 1;
 
-		// Saved data
+		// Recupera dado salvo
 		data = memory.getDataList()[position];
 
 		intbus2.put(position);
 		StackTop.store();
 
-		// Data removed from memory
+		// Remove dado da memória
 		memory.getDataList()[position] = 0;
 
-		// Bus get the data
+		// Internal bus guarda o dado, PC lê do internal bus
 		intbus2.put(data);
 		PC.internalStore();
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		//Pegar o ID do registrador e jogar seu valor na ULA
+		// Pega o ID do registrador e joga seu valor na ULA
 		PC.read();
 		memory.read();
 		demux.setValue(extbus1.get()); //points to the correct register
 		registersInternalRead(); //starts the read from the register
 		ula.store(1);
 
-		//Fazer o add, e passar o valor da soma para o registrador
+		// Realiza a soma e passa o valor da soma para o registrador
 		ula.add();
 		ula.internalRead(1);
 		setStatusFlags(intbus2.get());
 		ula.read(1);
-		demux.setValue(extbus1.get()); //points to the correct register
-		registersInternalStore(); //starts the read from the register
+		demux.setValue(extbus1.get()); // aponta para o registrador correto
+		registersInternalStore(); // começa a leitura do registrador
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 	}
 
 	// Sub commands
 	protected void subRegReg() {
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		// Ula(0) <- REGA
+		// Ula(0) <- RegA
 		PC.read();
 		memory.read();                   // the second register
-		demux.setValue(extbus1.get());   //points to the correct register
-		registersInternalRead();         //starts the read from the register
+		demux.setValue(extbus1.get());   // points to the correct register
+		registersInternalRead();         // starts the read from the register
 		ula.store(0);
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		// Ula(1) <- REGB
 		PC.read();
 		memory.read();                  // the second register
-		demux.setValue(extbus1.get());  //points to the correct register
-		registersInternalRead();        //starts the read from the register
+		demux.setValue(extbus1.get());  // points to the correct register
+		registersInternalRead();        // starts the read from the register
 		ula.store(1);
 
 		ula.sub();
 
-		// REGB <- UlaSub
+		// RegB <- UlaSub
 		ula.internalRead(1);
 		setStatusFlags(intbus2.get());
 		ula.read(1);
-		demux.setValue(extbus1.get());  //points to the correct register
+		demux.setValue(extbus1.get());  // points to the correct register
 		registersInternalStore();
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 	}
 
 	protected void subMemReg() {
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		// StackTop <- PC
 		PC.internalRead();
@@ -593,11 +598,11 @@ public class Architecture {
 		PC.internalStore();
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		// Ula(1) <- REGA
 		PC.read();
@@ -616,20 +621,20 @@ public class Architecture {
 		registersInternalStore();
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 	}
 
 	protected void subRegMem() {
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		//Pegar o valor do registrador e guardar na ULA
 		PC.read();
@@ -639,11 +644,11 @@ public class Architecture {
 		ula.store(0);
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		//Guardar o valor do PC
 		PC.internalRead();
@@ -699,20 +704,20 @@ public class Architecture {
 		memory.store();
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 	}
 
 	protected void subImmReg() {
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		//Guardar o valor do PC
 		PC.internalRead();
@@ -754,11 +759,11 @@ public class Architecture {
 		PC.internalStore();
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		//Pegar o ID do registrador e jogar seu valor na ULA
 		PC.read();
@@ -776,21 +781,21 @@ public class Architecture {
 		registersInternalStore(); //starts the read from the register
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 	}
 
 	// Move commands
 	public void moveMemReg() {
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		//guardar o pc no Stack
 		PC.internalRead();
@@ -833,11 +838,11 @@ public class Architecture {
 		PC.internalStore();
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		//jogar o valor da memoria no registrador
 		ula.read(0);
@@ -847,20 +852,20 @@ public class Architecture {
 		registersInternalStore();
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 	}
 
 	public void moveRegMem() {
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		//pegar o id do registrador, e aguardar o comando
 		PC.read();
@@ -868,14 +873,14 @@ public class Architecture {
 		demux.setValue(extbus1.get());
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		//pegar o endereço de memoria, e dar o comando pro registrador
-		//cuspir seu dado, guardando na memoria
+		// Pega o endereço de memória e dá o comando pro registrador
+		// Cospe o dado, guardando na memória
 		PC.read();
 		memory.read();
 		memory.store();
@@ -883,20 +888,20 @@ public class Architecture {
 		memory.store();
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 	}
 
 	public void moveRegReg() {
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
 		memory.read();
@@ -905,11 +910,11 @@ public class Architecture {
 		ula.store(0);
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
 		memory.read();
@@ -918,31 +923,31 @@ public class Architecture {
 		registersInternalStore();
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 	}
 
 	public void moveImmReg() {
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
 		memory.read();
 		IR.store();
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
 		memory.read();
@@ -951,21 +956,21 @@ public class Architecture {
 		registersStore();
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 	}
 
 	// Increment command
 	public void inc() {
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		// Ula(1) <- REGA
 		PC.read();
@@ -983,81 +988,81 @@ public class Architecture {
 		registersInternalStore();
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 	}
 
 	// Deviations
 	public void jmp() {
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		// PC <- Mem
-		PC.read();
-		memory.read();
-		PC.store();
+		PC.read();						// lê o dado do PC e guarda no external bus
+		memory.read();					// copia o dado da memória e guarda no external bus
+		PC.store();						// guarda o valor que está no external bus no PC
 	}
 
 	public void jz(){
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		if (Flags.getBit(0)==1){
+		if (Flags.getBit(0) == 1){
 			PC.read();
 			memory.read();
 			PC.store();
 		}
 		else {
 			// PC++
-			PC.internalRead();
-			ula.internalStore(1);
-			ula.inc();
-			ula.internalRead(1);
-			PC.internalStore();
+			PC.internalRead();				// copia os dados do PC para o internal bus
+			ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+			ula.inc();						// ula incrementa
+			ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+			PC.internalStore();				// copia os dados do internal bus e armazena em PC
 		}
 	}
 
 	public void jn(){
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
-		if (Flags.getBit(1)==1){
+		if (Flags.getBit(1) == 1){
 			PC.read();
 			memory.read();
 			PC.store();
 		}
 		else{
 			// PC++
-			PC.internalRead();
-			ula.internalStore(1);
-			ula.inc();
-			ula.internalRead(1);
-			PC.internalStore();
+			PC.internalRead();				// copia os dados do PC para o internal bus
+			ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+			ula.inc();						// ula incrementa
+			ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+			PC.internalStore();				// copia os dados do internal bus e armazena em PC
 		}
 	}
 
 	public void jeq(){
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
 		memory.read(); // the second register
@@ -1066,11 +1071,11 @@ public class Architecture {
 		ula.store(0);
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
 		memory.read(); // the second register
@@ -1082,14 +1087,13 @@ public class Architecture {
 		ula.internalRead(1);
 		setStatusFlags(intbus2.get());
 
-
 		if (Flags.getBit(0)==1){
 			// PC++
-			PC.internalRead();
-			ula.internalStore(1);
-			ula.inc();
-			ula.internalRead(1);
-			PC.internalStore();
+			PC.internalRead();				// copia os dados do PC para o internal bus
+			ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+			ula.inc();						// ula incrementa
+			ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+			PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 			PC.read();
 			memory.read();
@@ -1097,28 +1101,28 @@ public class Architecture {
 		}
 		else {
 			// PC++
-			PC.internalRead();
-			ula.internalStore(1);
-			ula.inc();
-			ula.internalRead(1);
-			PC.internalStore();
+			PC.internalRead();				// copia os dados do PC para o internal bus
+			ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+			ula.inc();						// ula incrementa
+			ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+			PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 			// PC++
-			PC.internalRead();
-			ula.internalStore(1);
-			ula.inc();
-			ula.internalRead(1);
-			PC.internalStore();
+			PC.internalRead();				// copia os dados do PC para o internal bus
+			ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+			ula.inc();						// ula incrementa
+			ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+			PC.internalStore();				// copia os dados do internal bus e armazena em PC
 		}
 	}
 
 	public void jneq(){
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
 		memory.read(); // the second register
@@ -1127,11 +1131,11 @@ public class Architecture {
 		ula.store(0);
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
 		memory.read(); // the second register
@@ -1143,14 +1147,13 @@ public class Architecture {
 		ula.internalRead(1);
 		setStatusFlags(intbus2.get());
 
-
 		if (Flags.getBit(0)!=1){
 			// PC++
-			PC.internalRead();
-			ula.internalStore(1);
-			ula.inc();
-			ula.internalRead(1);
-			PC.internalStore();
+			PC.internalRead();				// copia os dados do PC para o internal bus
+			ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+			ula.inc();						// ula incrementa
+			ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+			PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 			PC.read();
 			memory.read();
@@ -1158,28 +1161,28 @@ public class Architecture {
 		}
 		else {
 			// PC++
-			PC.internalRead();
-			ula.internalStore(1);
-			ula.inc();
-			ula.internalRead(1);
-			PC.internalStore();
+			PC.internalRead();				// copia os dados do PC para o internal bus
+			ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+			ula.inc();						// ula incrementa
+			ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+			PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 			// PC++
-			PC.internalRead();
-			ula.internalStore(1);
-			ula.inc();
-			ula.internalRead(1);
-			PC.internalStore();
+			PC.internalRead();				// copia os dados do PC para o internal bus
+			ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+			ula.inc();						// ula incrementa
+			ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+			PC.internalStore();				// copia os dados do internal bus e armazena em PC
 		}
 	}
 
 	public void jgt(){
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
 		memory.read(); // the second register
@@ -1188,11 +1191,11 @@ public class Architecture {
 		ula.store(0);
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
 		memory.read(); // the second register
@@ -1204,14 +1207,13 @@ public class Architecture {
 		ula.internalRead(1);
 		setStatusFlags(intbus2.get());
 
-
 		if (Flags.getBit(0)==0 && Flags.getBit(1)==0){
 			// PC++
-			PC.internalRead();
-			ula.internalStore(1);
-			ula.inc();
-			ula.internalRead(1);
-			PC.internalStore();
+			PC.internalRead();				// copia os dados do PC para o internal bus
+			ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+			ula.inc();						// ula incrementa
+			ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+			PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 			PC.read();
 			memory.read();
@@ -1219,28 +1221,28 @@ public class Architecture {
 		}
 		else{
 			// PC++
-			PC.internalRead();
-			ula.internalStore(1);
-			ula.inc();
-			ula.internalRead(1);
-			PC.internalStore();
+			PC.internalRead();				// copia os dados do PC para o internal bus
+			ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+			ula.inc();						// ula incrementa
+			ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+			PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 			// PC++
-			PC.internalRead();
-			ula.internalStore(1);
-			ula.inc();
-			ula.internalRead(1);
-			PC.internalStore();
+			PC.internalRead();				// copia os dados do PC para o internal bus
+			ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+			ula.inc();						// ula incrementa
+			ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+			PC.internalStore();				// copia os dados do internal bus e armazena em PC
 		}
 	}
 
 	public void jlw(){
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
 		memory.read(); // the second register
@@ -1249,11 +1251,11 @@ public class Architecture {
 		ula.store(0);
 
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		PC.read();
 		memory.read(); // the second register
@@ -1265,42 +1267,43 @@ public class Architecture {
 		ula.internalRead(1);
 		setStatusFlags(intbus2.get());
 
-
 		if (Flags.getBit(1)==1){
 			// PC++
-			PC.internalRead();
-			ula.internalStore(1);
-			ula.inc();
-			ula.internalRead(1);
-			PC.internalStore();
+			PC.internalRead();				// copia os dados do PC para o internal bus
+			ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+			ula.inc();						// ula incrementa
+			ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+			PC.internalStore();				// copia os dados do internal bus e armazena em PC
+
+			// jump
 			PC.read();
 			memory.read();
 			PC.store();
 		}
 		else{
 			// PC++
-			PC.internalRead();
-			ula.internalStore(1);
-			ula.inc();
-			ula.internalRead(1);
-			PC.internalStore();
+			PC.internalRead();				// copia os dados do PC para o internal bus
+			ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+			ula.inc();						// ula incrementa
+			ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+			PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 			// PC++
-			PC.internalRead();
-			ula.internalStore(1);
-			ula.inc();
-			ula.internalRead(1);
-			PC.internalStore();
+			PC.internalRead();				// copia os dados do PC para o internal bus
+			ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+			ula.inc();						// ula incrementa
+			ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+			PC.internalStore();				// copia os dados do internal bus e armazena em PC
 		}
 	}
 
 	public void call() {
 		// PC++
-		PC.internalRead();
-		ula.internalStore(1);
-		ula.inc();
-		ula.internalRead(1);
-		PC.internalStore();
+		PC.internalRead();				// copia os dados do PC para o internal bus
+		ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+		ula.inc();						// ula incrementa
+		ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+		PC.internalStore();				// copia os dados do internal bus e armazena em PC
 
 		// StackTop <- PC+1
 		ula.inc();
@@ -1318,7 +1321,7 @@ public class Architecture {
 		// Replacing the data on the bus
 		intbus2.put(data);
 
-		// PC <- Mem
+		// PC <- Mem (jump)
 		PC.read();
 		memory.read();
 		PC.store();
@@ -1328,11 +1331,11 @@ public class Architecture {
 		// PC <- StackTop
 		if(StackTop.getData() == StackBottom.getData()){
 			// PC++
-			PC.internalRead();
-			ula.internalStore(1);
-			ula.inc();
-			ula.internalRead(1);
-			PC.internalStore();
+			PC.internalRead();				// copia os dados do PC para o internal bus
+			ula.internalStore(1);		// pega o valor que tá em bus e guarda na ula
+			ula.inc();						// ula incrementa
+			ula.internalRead(1);		// lê o valor que está na ula e guarda no internal bus
+			PC.internalStore();				// copia os dados do internal bus e armazena em PC
 		}
 		else{
 			// Try to access the position below the stack top

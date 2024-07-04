@@ -68,12 +68,14 @@ public class TestArchitecture {
 
 		//now setting the registers values
 		arch.getExtbus1().put(3);
-		arch.getRegistersList().get(0).store(); //RPG0 has 3
+		arch.getRegistersList().get(0).store(); // RPG0 has 3
+
 		arch.getExtbus1().put(52);
-		arch.getRegistersList().get(1).store(); //RPG1 has 52
+		arch.getRegistersList().get(1).store(); // RPG1 has 52
 
 		//storing the number 1 in the memory, in position 31
 		arch.getMemory().getDataList()[31]=1;
+
 		//storing the number 0 in the memory, in position 32
 		arch.getMemory().getDataList()[32]=0;
 
@@ -91,7 +93,8 @@ public class TestArchitecture {
 		assertEquals(0, arch.getFlags().getBit(1));
 
 		//Testing if PC was pointing to 33
-		arch.getPC().read();assertEquals(33, arch.getExtbus1().get());
+		arch.getPC().read();
+		assertEquals(33, arch.getExtbus1().get());
 	}
 
 	@Test
@@ -886,13 +889,15 @@ public class TestArchitecture {
 	@Test
 	public void testJmp() {
 		Architecture arch = new Architecture();
+
 		//storing the number 10 in PC
 		arch.getIntbus2().put(10);
 		arch.getPC().internalStore();
 
-		//storing the number 25 in the memory, in the position just before that one adressed by PC
-		arch.getExtbus1().put(11); //the position is 11, once PC points to 10
+		//storing the number 25 in the memory, in the position just after the one stored in PC
+		arch.getExtbus1().put(11); // the position is 11, once PC points to 10
 		arch.getMemory().store();
+
 		arch.getExtbus1().put(25);
 		arch.getMemory().store();
 
@@ -902,10 +907,10 @@ public class TestArchitecture {
 		assertEquals(10, arch.getExtbus1().get());
 
 		//now we can perform the jmp method.
-		//we will move the the number 25 (stored in the 31th position in the memory)
+		//we will move the number 25 (stored in the 31th position in the memory)
 		//into the PC
 		arch.jmp();
-		arch.getPC().internalRead();;
+		arch.getPC().internalRead();
 		//the internalbus2 must contains the number 25
 		assertEquals(25, arch.getIntbus2().get());
 
